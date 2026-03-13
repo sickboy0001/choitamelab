@@ -9,8 +9,8 @@ export async function GET(req: Request) {
   }
 
   try {
-    await cronDailyTweet();
-    return NextResponse.json({ success: true });
+    const result = await cronDailyTweet();
+    return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

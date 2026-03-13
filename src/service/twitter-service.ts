@@ -88,10 +88,17 @@ export async function postTweet(requestId: string) {
 export async function cronDailyTweet() {
   // 1日1回、最新の依頼などをランダムまたは順番に1件ピックアップしてツイートするロジック
   const result = await query(
-    "SELECT id FROM cit_requests WHERE is_active = 1 AND is_public = 1 ORDER BY created_at DESC LIMIT 1",
+    "SELECT id, title FROM cit_requests WHERE is_active = 1 AND is_public = 1 ORDER BY created_at DESC LIMIT 1",
   );
   const request = result.rows[0] as any;
   if (request) {
-    await postTweet(request.id);
+    const tweetResult = await postTweet(request.id);
+    return {
+      success: true,
+      request_id: request.id,
+      title: request.title,
+      tweetResult,
+    };
   }
+  return { success: false, message: "No request found to tweet" };
 }

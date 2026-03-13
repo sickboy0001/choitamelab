@@ -1,259 +1,221 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
+  Menu,
+  X,
   LayoutDashboard,
   ClipboardList,
+  FileText,
+  MessageSquare,
   Settings,
-  PieChart,
-  Home,
-  Menu,
   LogOut,
-  LogIn,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { createClient } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
-import { logout } from "@/app/(auth)/actions";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Logs", href: "/hadbit/logs", icon: ClipboardList },
-  { name: "Items", href: "/hadbit/items", icon: Settings },
-  { name: "Analytics", href: "/hadbit/analytics", icon: PieChart },
-];
-
-export function Sidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-
-  const isLoggedIn = !!user;
-
-  // スタートページや認証ページではサイドバーを表示しない
-  if (["/", "/startPage", "/login", "/signup"].includes(pathname)) {
-    return null;
-  }
-
-  return (
-    <aside className="hidden md:flex flex-col w-64 border-r bg-card/50 backdrop-blur-md h-screen sticky top-0 p-4">
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-8 px-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold italic">H</span>
-          </div>
-          <div>
-            <div className="text-xl font-bold tracking-tight leading-none">
-              Hadbit
-            </div>
-          </div>
-        </div>
-        {isLoggedIn && (
-          <div className="text-[15px] text-muted-foreground mt-1 truncate max-w-[180px]">
-            {user?.email}
-          </div>
-        )}
-
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group",
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-lg"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                )}
-              >
-                <item.icon
-                  className={cn(
-                    "w-5 h-5",
-                    isActive
-                      ? ""
-                      : "group-hover:scale-110 transition-transform",
-                  )}
-                />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div className="pt-4 border-t border-border/50">
-        <Button
-          variant="ghost"
-          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
-          onClick={async () => {
-            if (isLoggedIn) {
-              await logout();
-            } else {
-              router.push("/login");
-            }
-          }}
-        >
-          {isLoggedIn ? (
-            <>
-              <LogOut className="h-5 w-5" />
-              <span>ログアウト</span>
-            </>
-          ) : (
-            <>
-              <LogIn className="h-5 w-5" />
-              <span>ログイン</span>
-            </>
-          )}
-        </Button>
-      </div>
-    </aside>
-  );
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
-export function MobileNav() {
+interface NavigationProps {
+  session: any; // Using any for now to avoid complex type issues with next-auth v5 session in client
+  signOutAction: () => Promise<void>;
+  signInAction: () => Promise<void>;
+  children: React.ReactNode;
+}
+
+export default function Navigation({
+  session,
+  signOutAction,
+  signInAction,
+  children,
+}: NavigationProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
 
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
+  const navItems = [
+    { href: "/dashboard", label: "ダッシュボード", icon: LayoutDashboard },
+    { href: "/requests", label: "依頼", icon: ClipboardList },
+    { href: "/reports", label: "報告", icon: FileText },
+    { href: "/comments", label: "コメント", icon: MessageSquare },
+  ];
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
 
-    return () => subscription.unsubscribe();
-  }, [supabase]);
-
-  const isLoggedIn = !!user;
-
-  // スタートページや認証ページではモバイルナビを表示しない
-  if (["/", "/startPage", "/login", "/signup"].includes(pathname)) {
-    return null;
-  }
+  const showSidebar = pathname !== "/";
 
   return (
-    <div className="md:hidden fixed bottom-6 left-6 z-50">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            size="icon"
-            className="h-14 w-14 rounded-full shadow-2xl bg-primary hover:bg-primary/90 transition-transform active:scale-95"
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 md:px-6 sticky top-0 z-50">
+        {showSidebar && (
+          <button
+            onClick={toggleMenu}
+            className="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-md md:hidden"
+            aria-label="メニューを開く"
           >
-            <Menu className="h-7 w-7" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent
-          side="left"
-          className="w-[280px] bg-card/95 backdrop-blur-xl border-r flex flex-col"
-        >
-          <SheetHeader className="text-left mb-8">
-            <div className="flex items-center gap-2 px-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold italic">
-                  H
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        )}
+
+        <Link href="/" className="text-2xl font-bold text-orange-600">
+          Choitame
+        </Link>
+
+        <div className="ml-auto flex items-center gap-4">
+          {session ? (
+            <div className="flex items-center gap-3">
+              {session.user?.isAdmin && (
+                <span className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase tracking-wider">
+                  Admin
                 </span>
-              </div>
-              <div>
-                <SheetTitle className="text-xl font-bold tracking-tight">
-                  Hadbit
-                </SheetTitle>
-                {isLoggedIn && (
-                  <div className="text-[10px] text-muted-foreground mt-0.5 truncate max-w-[180px]">
-                    {user?.email}
+              )}
+              <span className="text-sm font-medium text-slate-700 hidden sm:inline-block">
+                {session.user?.name}
+              </span>
+              <div className="group relative">
+                {session.user?.image ? (
+                  <img
+                    src={session.user.image}
+                    alt="User"
+                    className="w-8 h-8 rounded-full border border-gray-200 cursor-pointer"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer">
+                    {(session.user?.name || session.user?.email || "U")
+                      .charAt(0)
+                      .toUpperCase()}
                   </div>
                 )}
+                <div className="absolute right-0 top-full w-48 pt-2 hidden group-hover:block">
+                  <div className="bg-white border border-gray-200 rounded-md shadow-lg py-1">
+                    <Link
+                      href="/profile"
+                      onClick={closeMenu}
+                      className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-gray-100"
+                    >
+                      <Settings size={16} className="mr-2" />
+                      個人設定
+                    </Link>
+                    <hr className="my-1 border-gray-200" />
+                    <button
+                      onClick={() => signOutAction()}
+                      className="flex w-full items-center text-left px-4 py-2 text-sm text-slate-700 hover:bg-gray-100"
+                    >
+                      <LogOut size={16} className="mr-2" />
+                      ログオフ
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </SheetHeader>
-          <nav className="space-y-2 flex-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-4 px-4 py-3 rounded-xl transition-all",
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-md"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                  )}
-                >
-                  <item.icon className={cn("w-6 h-6", isActive ? "" : "")} />
-                  <span className="font-bold text-lg">{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="pt-4 border-t border-border/50">
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-4 h-12 text-muted-foreground hover:text-foreground hover:bg-muted"
-              onClick={async () => {
-                if (isLoggedIn) {
-                  await logout();
-                } else {
-                  router.push("/login");
-                }
-              }}
+          ) : (
+            <button
+              onClick={() => signInAction()}
+              className="px-4 py-2 bg-orange-600 text-white rounded-md text-sm font-medium hover:bg-orange-700"
             >
-              {isLoggedIn ? (
-                <>
-                  <LogOut className="h-6 w-6" />
-                  <span className="font-bold text-lg">ログアウト</span>
-                </>
-              ) : (
-                <>
-                  <LogIn className="h-6 w-6" />
-                  <span className="font-bold text-lg">ログイン</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
+              ログイン
+            </button>
+          )}
+        </div>
+      </header>
+
+      <div className="flex flex-1">
+        {/* Sidebar Overlay (Mobile) */}
+        <div
+          className={cn(
+            "fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 md:hidden",
+            isOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none",
+          )}
+          onClick={closeMenu}
+        />
+
+        {/* Sidebar */}
+        {showSidebar && (
+          <aside
+            className={cn(
+              "fixed inset-y-0 left-0 w-64 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block",
+              isOpen ? "translate-x-0" : "-translate-x-full",
+            )}
+          >
+            <nav className="p-4 space-y-1 h-full flex flex-col">
+              <div className="md:hidden flex items-center justify-between mb-6">
+                <span className="font-bold text-orange-600 text-xl">
+                  Choitame
+                </span>
+                <button
+                  onClick={closeMenu}
+                  className="p-2 text-gray-600 hover:bg-gray-200 rounded-md"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMenu}
+                    className={cn(
+                      "flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors",
+                      isActive
+                        ? "bg-orange-100 text-orange-700"
+                        : "text-slate-700 hover:bg-gray-200 hover:text-slate-900",
+                    )}
+                  >
+                    <Icon size={18} className="mr-3" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+
+              <div className="mt-auto md:hidden pt-4 border-t border-gray-200">
+                {session ? (
+                  <div className="space-y-1">
+                    <Link
+                      href="/profile"
+                      onClick={closeMenu}
+                      className="flex items-center px-4 py-2 text-sm font-medium text-slate-700 hover:bg-gray-200 rounded-md"
+                    >
+                      <Settings size={18} className="mr-3" />
+                      個人設定
+                    </Link>
+                    <button
+                      onClick={() => signOutAction()}
+                      className="flex w-full items-center px-4 py-2 text-sm font-medium text-slate-700 hover:bg-gray-200 rounded-md"
+                    >
+                      <LogOut size={18} className="mr-3" />
+                      ログオフ
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => signInAction()}
+                    className="flex w-full items-center px-4 py-2 text-sm font-medium text-slate-700 hover:bg-gray-200 rounded-md"
+                  >
+                    <LogOut size={18} className="mr-3" />
+                    ログイン
+                  </button>
+                )}
+              </div>
+            </nav>
+          </aside>
+        )}
+
+        {/* Main Content Area */}
+        <div className={cn("flex-1 flex flex-col", showSidebar && "p-6")}>
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

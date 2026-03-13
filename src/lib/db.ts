@@ -1,9 +1,27 @@
-import postgres from "postgres";
+import { createClient } from "@libsql/client";
 
-// Supabaseの「Transaction mode」か「Session mode」のURLを使用
-const connectionString = process.env.DATABASE_URL!;
-const sql = postgres(connectionString, {
-  prepare: false, // Supabaseのトランザクションモード(Port 6543)を使う場合はfalseを推奨
+const url = process.env.TURSO_DATABASE_URL;
+const authToken = process.env.TURSO_AUTH_TOKEN;
+
+if (!url) {
+  throw new Error("DATABASE_URL is not defined");
+}
+
+export const client = createClient({
+  url: url,
+  authToken: authToken,
 });
 
-export default sql;
+export async function query(sql: string, args?: any[]) {
+  try {
+    const result = await client.execute({ sql, args: args || [] });
+    // result.rows をプレーンなオブジェクトの配列に変換する
+    // Next.js の Server Components から Client Components へ渡す際に
+    // プレーンなオブジェクトである必要があるため
+    const rows = result.rows.map((row) => ({ ...row }));
+    return { ...result, rows };
+  } catch (error) {
+    console.error("Database query failed:", error);
+    throw error;
+  }
+}

@@ -11,5 +11,8 @@ jobs:
     steps:
       - name: Call Tweet API
         run: |
-          curl -X GET "${{ secrets.APP_URL }}/api/cron/tweet" \
+          URL="${{ secrets.APP_URL }}"
+          # 末尾のスラッシュを削除して正規化
+          CLEAN_URL="${URL%/}"
+          curl -v -X GET "$CLEAN_URL/api/cron/tweet" \
           -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

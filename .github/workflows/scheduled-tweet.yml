@@ -10,9 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call Tweet API
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          URL="${{ secrets.APP_URL }}"
-          # 末尾のスラッシュを削除して正規化
-          CLEAN_URL="${URL%/}"
-          curl -v -X GET "$CLEAN_URL/api/cron/tweet" \
-          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+          if [ -z "$APP_URL" ]; then
+            echo "Error: APP_URL secret is not set."
+            exit 1
+          fi
+
+          CLEAN_URL="${APP_URL%/}"
+          echo "Target URL: $CLEAN_URL/api/cron/tweet"
+
+          curl -v -f -X GET "$CLEAN_URL/api/cron/tweet" \
+          -H "Authorization: Bearer $CRON_SECRET"

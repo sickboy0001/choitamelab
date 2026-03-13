@@ -8,6 +8,7 @@ interface RequestViewProps {
   request: any;
   reports: any[];
   isAuthor: boolean;
+  isAdmin: boolean;
   isLoggedIn: boolean;
 }
 
@@ -16,6 +17,7 @@ export default function RequestView({
   request,
   reports,
   isAuthor,
+  isAdmin,
   isLoggedIn,
 }: RequestViewProps) {
   const sections = parseMarkdownSections(request.content_markdown);
@@ -30,13 +32,20 @@ export default function RequestView({
             {new Date(request.created_at).toLocaleDateString()}
           </p>
         </div>
-        {isAuthor && (
-          <Link
-            href={`/requests/${id}/edit`}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
-          >
-            編集する
-          </Link>
+        {(isAuthor || isAdmin) && (
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/requests/${id}/edit`}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
+            >
+              編集する
+            </Link>
+            {isAdmin && (
+              <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded border border-red-200">
+                Admin
+              </span>
+            )}
+          </div>
         )}
       </div>
 

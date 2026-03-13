@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const session = await auth();
 
   // テスト用なので管理者のみに制限
-  if (!isAdministrator(session?.user?.email)) {
+  if (!isAdministrator(session)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

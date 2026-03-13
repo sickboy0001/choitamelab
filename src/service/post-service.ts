@@ -1,6 +1,7 @@
 import { query } from "@/lib/db";
 import { auth } from "@/auth";
 import { saveHistory } from "./history-service";
+import { isAdministrator } from "@/lib/user";
 
 export async function getRequests() {
   const session = await auth();
@@ -84,10 +85,10 @@ export async function updateRequest(
   // 更新前に履歴を保存
   await saveHistory("request", id);
 
-  const sql = `
+  let sql = `
     UPDATE cit_requests 
     SET title = ?, appeal_point = ?, content_markdown = ?, max_reports = ?, is_active = ?, is_public = ?
-    WHERE id = ? AND user_id = ?
+    WHERE id = ?
   `;
   const args = [
     data.title,
@@ -97,8 +98,13 @@ export async function updateRequest(
     data.is_active ? 1 : 0,
     data.is_public ? 1 : 0,
     id,
-    session.user.id,
   ];
+
+  // 管理者でない場合は、自分の投稿のみ更新可能
+  if (!isAdministrator(session)) {
+    sql += " AND user_id = ?";
+    args.push(session.user.id);
+  }
 
   await query(sql, args);
 }

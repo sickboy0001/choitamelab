@@ -3,6 +3,7 @@ import { getReportsByRequestId } from "@/service/report-service";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import RequestView from "@/components/pages/requests/request_view";
+import { isAdministrator } from "@/lib/user";
 
 export default async function RequestDetailPage({
   params,
@@ -16,6 +17,7 @@ export default async function RequestDetailPage({
   const reports = await getReportsByRequestId(id);
   const session = await auth();
   const isAuthor = session?.user?.id === request.user_id;
+  const isAdmin = isAdministrator(session);
 
   return (
     <RequestView
@@ -23,6 +25,7 @@ export default async function RequestDetailPage({
       request={request}
       reports={reports}
       isAuthor={isAuthor}
+      isAdmin={isAdmin}
       isLoggedIn={!!session}
     />
   );

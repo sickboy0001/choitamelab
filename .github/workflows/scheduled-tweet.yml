@@ -1,0 +1,15 @@
+name: Scheduled Tweet
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 毎日日本時間 9:00 (UTC 0:00) に実行
+  workflow_dispatch: # GitHub上のボタンから手動実行できるようにする
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Tweet API
+        run: |
+          curl -X GET "${{ secrets.APP_URL }}/api/cron/tweet" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

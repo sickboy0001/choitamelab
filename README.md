@@ -555,18 +555,19 @@ export default async function handler(req, res) {
 - [ ] パスワード忘れた場合、メールからパスワードリセットの画面
 - [ ] 報告一覧画面
 - [ ] コメント一覧画面
-- [x] GitHubActionからのコール
 - [ ] 依頼でのMarkdownでの表現
 - [ ] レポートでのMarkDownの表現
-- [x] Markdown記載の案内
 - [ ] Twitterでの文面
-- [x] Api設計
 - [ ] Twtter連携 　投稿のテスト タイトル＋紹介文＋対処へのURL
 - [ ] ダッシュボード 叩き
 - [ ] ダッシュボード 機能アップ
 - [ ] forgetPassword　メールアドレスへメール　メールからURLを開く　URLでパスワード入力
 - [ ] create new account　メールアドレス　ユーザー名　パスワード入力
-
+- [ ] favicon精査
+- [x] favicon案作成
+- [x] Api設計
+- [x] Markdown記載の案内
+- [x] GitHubActionからのコール
 
 ## hitory
 - 2026/03/14

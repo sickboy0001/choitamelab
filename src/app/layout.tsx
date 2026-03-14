@@ -40,8 +40,6 @@ export default async function RootLayout({
 
   return (
     <html lang="ja">
-      <body>{children}</body>
-      <GoogleAnalytics gaId="G-NJ2V7CT80L" /> {/* メモしたIDを入れる */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
@@ -58,6 +56,7 @@ export default async function RootLayout({
         <footer className="bg-gray-50 border-t border-gray-200 p-6 text-center text-sm text-slate-500">
           &copy; 2026 Choitame. All rights reserved.
         </footer>
+        <GoogleAnalytics gaId="G-NJ2V7CT80L" />
       </body>
     </html>
   );

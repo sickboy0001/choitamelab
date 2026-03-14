@@ -1,5 +1,6 @@
 import { query } from "@/lib/db";
 import { auth } from "@/auth";
+import { nanoid } from "nanoid";
 
 export async function getRequestDetail(id: string) {
   const session = await auth();
@@ -107,10 +108,10 @@ export async function createReport(data: {
     );
   }
 
-  const id = crypto.randomUUID();
+  const id = nanoid(8);
   const sql = `
-    INSERT INTO cit_reports (id, request_id, user_id, content_markdown, is_active, is_public)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO cit_reports (id, request_id, user_id, content_markdown, is_active, is_public, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
   `;
   console.log("sql:", sql);
   console.log("Creating report with args:", {

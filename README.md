@@ -555,22 +555,13 @@ export default async function handler(req, res) {
 - [ ] パスワード忘れた場合、メールからパスワードリセットの画面
 - [ ] 報告一覧画面
 - [ ] コメント一覧画面
-- [ ] GitHubActionからのコール
-- [ ] Api設計
-　報告から、ランダムで入手
-　それ以外宣伝のサイトも記事に登録しておく
-　Apiはコールされて、データ取得して、Twitterするまでがゴールを想定
-　基本のTweetはかっこいい方がいいかもの認識
-　Tweetの設計
-　　タイトル＋紹介文＋対処へのURL
-- [ ] Twtter連携
-　投稿のテスト
+- [x] GitHubActionからのコール
+- [ ] 依頼でのMarkdownでの表現
+- [ ] レポートでのMarkDownの表現
+- [ ] Markdown記載の案内
+- [ ] Twitterでの文面
+- [x] Api設計
+- [ ] Twtter連携 　投稿のテスト タイトル＋紹介文＋対処へのURL
 - [ ] ダッシュボード
-- [ ] forgetPassword
-    メールアドレスへメール
-    メールからURLを開く
-    URLでパスワード入力
-- [ ] create new account
-    メールアドレス
-    ユーザー名
-    パスワード入力
+- [ ] forgetPassword　メールアドレスへメール　メールからURLを開く　URLでパスワード入力
+- [ ] create new account　メールアドレス　ユーザー名　パスワード入力

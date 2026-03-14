@@ -2,6 +2,7 @@ import { query } from "@/lib/db";
 import { auth } from "@/auth";
 import { saveHistory } from "./history-service";
 import { isAdministrator } from "@/lib/user";
+import { nanoid } from "nanoid";
 
 export async function getRequests() {
   const session = await auth();
@@ -48,10 +49,10 @@ export async function createRequest(data: {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
-  const id = crypto.randomUUID();
+  const id = nanoid(8);
   const sql = `
-    INSERT INTO cit_requests (id, user_id, title, appeal_point, content_markdown, max_reports, is_active, is_public)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO cit_requests (id, user_id, title, appeal_point, content_markdown, max_reports, is_active, is_public, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
   `;
   const args = [
     id,
@@ -59,7 +60,7 @@ export async function createRequest(data: {
     data.title,
     data.appeal_point,
     data.content_markdown,
-    data.max_reports,
+    data.max_reports || 0,
     data.is_active ? 1 : 0,
     data.is_public ? 1 : 0,
   ];
@@ -87,14 +88,14 @@ export async function updateRequest(
 
   let sql = `
     UPDATE cit_requests 
-    SET title = ?, appeal_point = ?, content_markdown = ?, max_reports = ?, is_active = ?, is_public = ?
+    SET title = ?, appeal_point = ?, content_markdown = ?, max_reports = ?, is_active = ?, is_public = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
   `;
   const args = [
     data.title,
     data.appeal_point,
     data.content_markdown,
-    data.max_reports,
+    data.max_reports || 0,
     data.is_active ? 1 : 0,
     data.is_public ? 1 : 0,
     id,

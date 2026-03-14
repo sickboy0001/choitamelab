@@ -1,5 +1,6 @@
 import { query } from "@/lib/db";
 import { auth } from "@/auth";
+import { nanoid } from "nanoid";
 
 export async function createComment(data: {
   target_type: "request" | "report";
@@ -10,10 +11,10 @@ export async function createComment(data: {
   const session = await auth();
   const userId = session?.user?.id;
 
-  const id = crypto.randomUUID();
+  const id = nanoid(8);
   const sql = `
-    INSERT INTO cit_comments (id, target_type, target_id, user_id, guest_name, content)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO cit_comments (id, target_type, target_id, user_id, guest_name, content, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
   `;
   const args = [
     id,

@@ -1,4 +1,5 @@
 import { query } from "@/lib/db";
+import { nanoid } from "nanoid";
 
 export async function saveHistory(
   targetType: "request" | "report",
@@ -14,7 +15,7 @@ export async function saveHistory(
 
   if (!currentData) return;
 
-  const historyId = crypto.randomUUID();
+  const historyId = nanoid(8);
   const sql = `
     INSERT INTO cit_histories (id, target_type, target_id, old_data)
     VALUES (?, ?, ?, ?)

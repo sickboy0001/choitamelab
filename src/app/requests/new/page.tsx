@@ -12,7 +12,7 @@ export default async function NewRequestPage() {
     const title = formData.get("title") as string;
     const appeal_point = formData.get("appeal_point") as string;
     const content_markdown = formData.get("content_markdown") as string;
-    const max_reports = parseInt(formData.get("max_reports") as string);
+    const max_reports = parseInt(formData.get("max_reports") as string) || 0;
     const is_active = formData.get("is_active") === "on";
     const is_public = formData.get("is_public") === "on";
 

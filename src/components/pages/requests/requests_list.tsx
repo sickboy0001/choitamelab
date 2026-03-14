@@ -87,68 +87,60 @@ export default function RequestsList({
               : "表示できる依頼はありません。"}
           </p>
         ) : (
-          displayRequests.map((req) => (
-            <div
-              key={req.id}
-              className="p-4 border border-gray-200 rounded-lg hover:border-orange-300 transition-colors"
-            >
-              <div className="flex flex-wrap justify-between items-start mb-2 gap-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Link
-                    href={`/requests/${req.id}`}
-                    className="text-lg font-bold text-slate-800 hover:text-orange-600"
-                  >
-                    {req.title}
-                  </Link>
-                  <div className="flex gap-1">
-                    <Link
-                      href={`/requests/${req.id}`}
-                      className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[10px] font-medium rounded text-slate-600 transition-colors"
-                    >
-                      詳細
-                    </Link>
-                    <Link
-                      href={`/requests/${req.id}#reports`}
-                      className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[10px] font-medium rounded text-slate-600 transition-colors"
-                    >
-                      報告一覧
-                    </Link>
-                    <Link
-                      href={`/requests/${req.id}#comments`}
-                      className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[10px] font-medium rounded text-slate-600 transition-colors"
-                    >
-                      コメント一覧
-                    </Link>
+          displayRequests.map((req) => {
+            const isMine = userId === req.user_id;
+            const targetUrl = isMine
+              ? `/requests/${req.id}/edit`
+              : `/requests/${req.id}`;
+
+            return (
+              <Link
+                key={req.id}
+                href={targetUrl}
+                className="block p-4 border border-gray-200 rounded-lg hover:border-orange-300 transition-colors group"
+              >
+                <div className="flex flex-wrap justify-between items-start mb-2 gap-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-lg font-bold text-slate-800 group-hover:text-orange-600 transition-colors">
+                      {req.title}
+                    </span>
+                    <div className="flex gap-1">
+                      {isMine && (
+                        <div className="px-2 py-1 bg-orange-100 text-[10px] font-medium rounded text-orange-600">
+                          編集する
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {req.is_active ? (
+                      <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">
+                        有効
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+                        下書き
+                      </span>
+                    )}
+                    {req.is_public && (
+                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
+                        公開
+                      </span>
+                    )}
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  {req.is_active ? (
-                    <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">
-                      有効
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
-                      下書き
-                    </span>
-                  )}
-                  {req.is_public && (
-                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
-                      公開
-                    </span>
-                  )}
+                <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                  {req.appeal_point}
+                </p>
+                <div className="flex justify-between items-center text-xs text-slate-400">
+                  <span>作成者: {req.author_name || "不明"}</span>
+                  <span>
+                    作成日: {new Date(req.created_at).toLocaleDateString()}
+                  </span>
                 </div>
-              </div>
-              <p className="text-sm text-slate-600 mb-4 line-clamp-2">
-                {req.appeal_point}
-              </p>
-              <div className="flex justify-between items-center text-xs text-slate-400">
-                <span>作成者: {req.author_name || "不明"}</span>
-                <span>
-                  作成日: {new Date(req.created_at).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-          ))
+              </Link>
+            );
+          })
         )}
       </div>
     </div>

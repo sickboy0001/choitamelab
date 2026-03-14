@@ -20,6 +20,7 @@ export async function createTables() {
       is_active BOOLEAN DEFAULT 0,
       is_public BOOLEAN DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )`,
     `CREATE TABLE IF NOT EXISTS cit_reports (
@@ -30,6 +31,7 @@ export async function createTables() {
       is_active BOOLEAN DEFAULT 0,
       is_public BOOLEAN DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (request_id) REFERENCES cit_requests(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     )`,
@@ -41,6 +43,7 @@ export async function createTables() {
       guest_name TEXT, -- Nullable
       content TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )`,
     `CREATE TABLE IF NOT EXISTS cit_histories (

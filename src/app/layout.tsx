@@ -41,7 +41,7 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body>{children}</body>
-      <GoogleAnalytics gaId="G-M21ZVP3XSN" /> {/* メモしたIDを入れる */}
+      <GoogleAnalytics gaId="G-NJ2V7CT80L" /> {/* メモしたIDを入れる */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >

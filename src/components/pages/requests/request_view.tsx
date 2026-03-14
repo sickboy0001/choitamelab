@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { parseMarkdownSections } from "@/lib/markdown";
+import CommentList from "@/components/organize/comment_list";
 
 interface RequestViewProps {
   id: string;
   request: any;
   reports: any[];
+  requestComments: any[];
   isAuthor: boolean;
   isAdmin: boolean;
   isLoggedIn: boolean;
@@ -16,6 +18,7 @@ export default function RequestView({
   id,
   request,
   reports,
+  requestComments,
   isAuthor,
   isAdmin,
   isLoggedIn,
@@ -133,6 +136,18 @@ export default function RequestView({
                       </div>
                     ))}
                   </div>
+
+                  {/* 報告に対するコメント */}
+                  <div className="mt-4 pt-4 border-t border-gray-50 space-y-2">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-tight">
+                      Comments
+                    </h4>
+                    <CommentList
+                      comments={report.comments || []}
+                      targetType="report"
+                      targetId={report.id}
+                    />
+                  </div>
                 </div>
               );
             })
@@ -144,7 +159,11 @@ export default function RequestView({
 
       <div className="space-y-4" id="comments">
         <h2 className="text-xl font-bold text-slate-800">コメント</h2>
-        <p className="text-sm text-slate-500">コメント機能は現在準備中です。</p>
+        <CommentList
+          comments={requestComments}
+          targetType="request"
+          targetId={id}
+        />
       </div>
     </div>
   );

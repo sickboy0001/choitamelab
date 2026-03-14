@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth/core": "^0.34.3",
     "@libsql/client": "^0.17.0",
+    "@next/third-parties": "^16.1.6",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",

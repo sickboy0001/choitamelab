@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import { auth, signIn, signOut } from "@/auth";
 import Navigation from "@/components/layout/Navigations";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,8 @@ export default async function RootLayout({
 
   return (
     <html lang="ja">
+      <body>{children}</body>
+      <GoogleAnalytics gaId="G-M21ZVP3XSN" /> {/* メモしたIDを入れる */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { createRequest } from "@/service/post-service";
 import Link from "next/link";
+import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
 
 export default async function NewRequestPage() {
   const session = await auth();
@@ -79,9 +80,12 @@ export default async function NewRequestPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700">
-            検証内容 (Markdown)
-          </label>
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium text-slate-700">
+              検証内容 (Markdown)
+            </label>
+            <MarkdownHelpSheet />
+          </div>
           <textarea
             name="content_markdown"
             required

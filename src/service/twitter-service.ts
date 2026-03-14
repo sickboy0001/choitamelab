@@ -72,13 +72,14 @@ export async function sendTweet(text: string) {
 
 export async function postTweet(requestId: string) {
   const result = await query(
-    "SELECT title, appeal_point FROM cit_requests WHERE id = ?",
+    "SELECT id, title, appeal_point FROM cit_requests WHERE id = ?",
     [requestId],
   );
   const request = result.rows[0] as any;
   if (!request) return;
 
-  const text = `${request.title}\n${request.appeal_point}\n#Choitame #検証依頼`;
+  const url = `https://choitamelab.vercel.app/requests/${request.id}`;
+  const text = `${request.title}\n${request.appeal_point}\n${url}\n#Choitame #検証依頼`;
 
   console.log("Tweeting:", text);
 
@@ -88,7 +89,7 @@ export async function postTweet(requestId: string) {
 export async function cronDailyTweet() {
   // 1日1回、最新の依頼などをランダムまたは順番に1件ピックアップしてツイートするロジック
   const result = await query(
-    "SELECT id, title FROM cit_requests WHERE is_active = 1 AND is_public = 1 ORDER BY created_at DESC LIMIT 1",
+    "SELECT id, title FROM cit_requests WHERE is_active = 1 AND is_public = 1 ORDER BY RANDOM() LIMIT 1",
   );
   const request = result.rows[0] as any;
   if (request) {

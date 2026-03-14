@@ -562,6 +562,12 @@ export default async function handler(req, res) {
 - [ ] Twitterでの文面
 - [x] Api設計
 - [ ] Twtter連携 　投稿のテスト タイトル＋紹介文＋対処へのURL
-- [ ] ダッシュボード
+- [ ] ダッシュボード 叩き
+- [ ] ダッシュボード 機能アップ
 - [ ] forgetPassword　メールアドレスへメール　メールからURLを開く　URLでパスワード入力
 - [ ] create new account　メールアドレス　ユーザー名　パスワード入力
+
+
+## hitory
+- 2026/03/14
+  - デプロイ [vercel](https://choitamelab.vercel.app/dashboard)

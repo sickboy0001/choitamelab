@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Choitame - 検証プラットフォーム",
+  title: "ChoitameLab - 検証プラットフォーム",
   description: "依頼と報告で検証を加速させる",
 };
 

@@ -63,7 +63,7 @@ export default function Navigation({
         )}
 
         <Link href="/" className="text-2xl font-bold text-orange-600">
-          Choitame
+          ChoitameLab
         </Link>
 
         <div className="ml-auto flex items-center gap-4">
@@ -147,7 +147,7 @@ export default function Navigation({
             <nav className="p-4 space-y-1 h-full flex flex-col">
               <div className="md:hidden flex items-center justify-between mb-6">
                 <span className="font-bold text-orange-600 text-xl">
-                  Choitame
+                  ChoitameLab
                 </span>
                 <button
                   onClick={closeMenu}

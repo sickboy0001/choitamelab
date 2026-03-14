@@ -32,7 +32,7 @@ export default async function Home() {
               <span className="text-orange-600">誰かの力に変える。</span>
             </h1>
             <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl">
-              Choitame（ちょいため）は、小さな依頼と報告を通じて、
+              ChoitameLab（ちょいためらぼ）は、小さな依頼と報告を通じて、
               コミュニティの成果を可視化し、価値を高めるプラットフォームです。
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -122,7 +122,7 @@ export default async function Home() {
                 やり取りをサポート
               </h2>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Choitameは、ユーザー同士が安心して協力し合えるよう、認証機能と履歴管理を徹底しています。誰がどのような貢献をしたかが明確になるため、健全なコミュニティ運営が可能です。
+                ChoitameLabは、ユーザー同士が安心して協力し合えるよう、認証機能と履歴管理を徹底しています。誰がどのような貢献をしたかが明確になるため、健全なコミュニティ運営が可能です。
               </p>
               <ul className="space-y-4">
                 {[

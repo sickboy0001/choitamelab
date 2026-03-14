@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { createRequest } from "@/service/post-service";
+import { createRequest } from "@/service/request-service";
 import Link from "next/link";
 import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
 

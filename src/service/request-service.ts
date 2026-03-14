@@ -32,7 +32,7 @@ export async function getRequests() {
     conditions.push(`(r.is_active = 1 AND r.is_public = 1)`);
   }
 
-  sql += conditions.join(" AND ") + " ORDER BY r.created_at DESC";
+  sql += conditions.join(" AND ") + " ORDER BY r.updated_at DESC";
 
   const result = await query(sql, args);
   return result.rows;

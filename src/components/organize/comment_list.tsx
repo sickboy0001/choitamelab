@@ -1,6 +1,7 @@
 "use client";
 
 import CommentForm from "./comment_form";
+import { formatDateToJst } from "@/lib/date";
 
 interface Comment {
   id: string;
@@ -40,7 +41,7 @@ export default function CommentList({
                     {comment.author_name || comment.guest_name || "ゲスト"}
                   </span>
                   <span className="text-[10px] text-slate-400">
-                    {new Date(comment.created_at).toLocaleString()}
+                    {formatDateToJst(comment.created_at)}
                   </span>
                 </div>
                 <div className="text-sm text-slate-800 whitespace-pre-wrap">

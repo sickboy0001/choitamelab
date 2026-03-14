@@ -1,4 +1,4 @@
-import { getRequests } from "@/service/post-service";
+import { getRequests } from "@/service/request-service";
 import { auth } from "@/auth";
 import RequestsList from "@/components/pages/requests/requests_list";
 

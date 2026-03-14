@@ -35,6 +35,7 @@ export default async function NewReportPage({
     <RequestReportDetail
       requestId={requestId}
       requestTitle={request.title}
+      requestAppealPoint={request.appeal_point}
       requestContentMarkdown={request.content_markdown}
       isRequestActive={request.is_active}
       isRequestPublic={request.is_public}

@@ -41,6 +41,7 @@ export default async function RequestDetailPage({
       isAuthor={isAuthor}
       isAdmin={isAdmin}
       isLoggedIn={!!session}
+      userId={session?.user?.id}
     />
   );
 }

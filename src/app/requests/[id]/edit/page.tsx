@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { getRequestDetail } from "@/service/report-service";
-import { updateRequest } from "@/service/post-service";
+import { updateRequest } from "@/service/request-service";
 import { isAdministrator } from "@/lib/user";
 import RequestEdit from "@/components/pages/requests/request_edit";
 

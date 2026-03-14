@@ -558,7 +558,7 @@ export default async function handler(req, res) {
 - [x] GitHubActionからのコール
 - [ ] 依頼でのMarkdownでの表現
 - [ ] レポートでのMarkDownの表現
-- [ ] Markdown記載の案内
+- [x] Markdown記載の案内
 - [ ] Twitterでの文面
 - [x] Api設計
 - [ ] Twtter連携 　投稿のテスト タイトル＋紹介文＋対処へのURL

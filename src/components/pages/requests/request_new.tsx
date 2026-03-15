@@ -12,28 +12,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface RequestEditProps {
-  id: string;
-  request: any;
-  isAdmin: boolean;
-  isAuthor: boolean;
-  updateAction: (formData: FormData) => Promise<void>;
+interface RequestNewProps {
+  createAction: (formData: FormData) => Promise<void>;
 }
 
-export default function RequestEdit({
-  id,
-  request,
-  isAdmin,
-  isAuthor,
-  updateAction,
-}: RequestEditProps) {
+export default function RequestNew({ createAction }: RequestNewProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewData, setPreviewData] = useState({
     appeal_point: "",
     content_markdown: "",
   });
-  const [title, setTitle] = useState(request.title || "");
-  const [appealPoint, setAppealPoint] = useState(request.appeal_point || "");
+  const [title, setTitle] = useState("");
+  const [appealPoint, setAppealPoint] = useState("");
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -50,18 +40,25 @@ export default function RequestEdit({
 
   const totalLength = title.length + appealPoint.length;
 
+  const defaultMarkdown = `
+## 前提
+- 利用条件など
+
+## 検証してほしい内容
+- 1日10件ほどのメモをまとめる機能があるのでそれが妥当かどうかの確認
+
+## 求めている報告内容
+- 1週間ほどやってみての感想が欲しいです。
+
+## その他情報
+- 
+`;
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-slate-800">依頼の編集</h1>
-        {isAdmin && !isAuthor && (
-          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded border border-red-200">
-            Admin
-          </span>
-        )}
-      </div>
+      <h1 className="text-2xl font-bold text-slate-800">新規依頼作成</h1>
 
-      <form ref={formRef} action={updateAction} className="space-y-4">
+      <form ref={formRef} action={createAction} className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700 flex justify-between items-center">
             <span>タイトル (タイトル＋アピールで100文字以内)</span>
@@ -77,7 +74,6 @@ export default function RequestEdit({
           <input
             name="title"
             required
-            defaultValue={request.title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
             placeholder="依頼のタイトルを入力"
@@ -91,7 +87,6 @@ export default function RequestEdit({
           <textarea
             name="appeal_point"
             required
-            defaultValue={request.appeal_point}
             onChange={(e) => setAppealPoint(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md h-20"
             placeholder="Twitterで表示されるアピール内容"
@@ -108,7 +103,7 @@ export default function RequestEdit({
           <textarea
             name="content_markdown"
             required
-            defaultValue={request.content_markdown}
+            defaultValue={defaultMarkdown}
             className="w-full p-2 border border-gray-300 rounded-md h-64 font-mono text-sm"
           />
         </div>
@@ -121,7 +116,7 @@ export default function RequestEdit({
             <input
               name="max_reports"
               type="number"
-              defaultValue={request.max_reports}
+              defaultValue="10"
               className="w-full p-2 border border-gray-300 rounded-md"
             />
           </div>
@@ -132,7 +127,6 @@ export default function RequestEdit({
             <input
               type="checkbox"
               name="is_active"
-              defaultChecked={request.is_active === 1}
               className="w-4 h-4 text-orange-600"
             />
             <span className="text-sm font-medium text-slate-700">
@@ -143,7 +137,6 @@ export default function RequestEdit({
             <input
               type="checkbox"
               name="is_public"
-              defaultChecked={request.is_public === 1}
               className="w-4 h-4 text-orange-600"
             />
             <span className="text-sm font-medium text-slate-700">
@@ -154,7 +147,7 @@ export default function RequestEdit({
 
         <div className="flex justify-end gap-3 pt-4">
           <Link
-            href={`/requests/${id}`}
+            href="/requests"
             className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"
           >
             キャンセル
@@ -170,7 +163,7 @@ export default function RequestEdit({
             type="submit"
             className="px-4 py-2 bg-orange-600 text-white rounded-md text-sm font-medium hover:bg-orange-700"
           >
-            更新する
+            作成する
           </button>
         </div>
       </form>

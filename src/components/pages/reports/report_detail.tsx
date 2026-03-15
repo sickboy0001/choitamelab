@@ -1,8 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useRef } from "react";
 import { Markdown } from "@/components/ui/markdown";
 import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
+import { RequestSummary } from "@/components/organize/request_summary";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface RequestDetailProps {
   requestId: string;
@@ -23,6 +31,18 @@ export default function RequestReportDetail({
   isRequestPublic,
   action,
 }: RequestDetailProps) {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewMarkdown, setPreviewMarkdown] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handlePreview = () => {
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      setPreviewMarkdown((formData.get("content_markdown") as string) || "");
+      setIsPreviewOpen(true);
+    }
+  };
+
   // Markdownを「##」で分割してカード化する
   const sections = requestContentMarkdown
     .split(/(?=^##\s+)/m)
@@ -64,7 +84,7 @@ export default function RequestReportDetail({
         })}
       </div>
 
-      <form action={action} className="space-y-4">
+      <form ref={formRef} action={action} className="space-y-4">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium text-slate-700">
@@ -124,6 +144,13 @@ export default function RequestReportDetail({
             キャンセル
           </Link>
           <button
+            type="button"
+            onClick={handlePreview}
+            className="px-4 py-2 border border-orange-200 bg-orange-50 text-orange-700 rounded-md text-sm font-medium hover:bg-orange-100 transition-colors"
+          >
+            プレビュー
+          </button>
+          <button
             type="submit"
             className="px-4 py-2 bg-slate-800 text-white rounded-md text-sm font-medium hover:bg-slate-700"
           >
@@ -131,6 +158,20 @@ export default function RequestReportDetail({
           </button>
         </div>
       </form>
+
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>報告内容のプレビュー</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <RequestSummary
+              appealPoint={requestAppealPoint}
+              contentMarkdown={previewMarkdown}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

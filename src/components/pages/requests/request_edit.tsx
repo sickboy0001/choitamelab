@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useRef } from "react";
 import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
+import { RequestSummary } from "@/components/organize/request_summary";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface RequestEditProps {
   id: string;
@@ -18,6 +26,24 @@ export default function RequestEdit({
   isAuthor,
   updateAction,
 }: RequestEditProps) {
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewData, setPreviewData] = useState({
+    appeal_point: "",
+    content_markdown: "",
+  });
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handlePreview = () => {
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      setPreviewData({
+        appeal_point: (formData.get("appeal_point") as string) || "",
+        content_markdown: (formData.get("content_markdown") as string) || "",
+      });
+      setIsPreviewOpen(true);
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center gap-2">
@@ -29,7 +55,7 @@ export default function RequestEdit({
         )}
       </div>
 
-      <form action={updateAction} className="space-y-4">
+      <form ref={formRef} action={updateAction} className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700">
             タイトル (タイトル＋アピールで100文字以内)
@@ -118,6 +144,13 @@ export default function RequestEdit({
             キャンセル
           </Link>
           <button
+            type="button"
+            onClick={handlePreview}
+            className="px-4 py-2 border border-orange-200 bg-orange-50 text-orange-700 rounded-md text-sm font-medium hover:bg-orange-100 transition-colors"
+          >
+            プレビュー
+          </button>
+          <button
             type="submit"
             className="px-4 py-2 bg-orange-600 text-white rounded-md text-sm font-medium hover:bg-orange-700"
           >
@@ -125,6 +158,20 @@ export default function RequestEdit({
           </button>
         </div>
       </form>
+
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>プレビュー</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <RequestSummary
+              appealPoint={previewData.appeal_point}
+              contentMarkdown={previewData.content_markdown}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

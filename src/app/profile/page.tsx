@@ -11,7 +11,8 @@ export default async function ProfilePage() {
 
   const updateAction = async (data: {
     display_name: string;
-    twitter_account?: string;
+    self_intro_text?: string;
+    self_intro_markdown?: string;
   }) => {
     "use server";
     await updateUserProfile(data);

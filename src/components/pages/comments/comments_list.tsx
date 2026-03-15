@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MessageSquare, User } from "lucide-react";
 import { formatDateToJst } from "@/lib/date";
+import { UserTooltip } from "@/components/organize/user_tooltip";
 
 interface CommentSummaryItem {
   id: string;
@@ -13,6 +14,8 @@ interface CommentSummaryItem {
   content: string;
   updated_at: string;
   author_name: string | null;
+  author_intro_text?: string;
+  author_intro_markdown?: string;
   display_request_title: string;
   display_request_id: string;
   report_id: string | null;
@@ -48,7 +51,14 @@ export default function CommentsList({ comments }: CommentsListProps) {
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-slate-800">
-                        {comment.author_name || comment.guest_name || "ゲスト"}
+                        {comment.author_name && comment.user_id ? (
+                          <UserTooltip
+                            userId={comment.user_id}
+                            name={comment.author_name}
+                          />
+                        ) : (
+                          comment.guest_name || "ゲスト"
+                        )}
                       </span>
                       <span className="text-xs text-slate-400">
                         {formatDateToJst(comment.updated_at, "MM-dd HH:mm")}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { UserTooltip } from "@/components/organize/user_tooltip";
 
 interface RequestItem {
   id: string;
@@ -133,7 +134,22 @@ export default function RequestsList({
                   {req.appeal_point}
                 </p>
                 <div className="flex justify-between items-center text-xs text-slate-400">
-                  <span>作成者: {req.author_name || "不明"}</span>
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    作成者:{" "}
+                    {req.author_name && req.user_id ? (
+                      <UserTooltip
+                        userId={req.user_id}
+                        name={req.author_name}
+                      />
+                    ) : (
+                      "不明"
+                    )}
+                  </div>
                   <span>
                     作成日: {new Date(req.created_at).toLocaleDateString()}
                   </span>

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight, Edit } from "lucide-react";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Markdown } from "@/components/ui/markdown";
 import { parseMarkdownSections } from "@/lib/markdown";
 import CommentList from "@/components/organize/comment_list";
 import { formatDateToJst } from "@/lib/date";
+import { UserTooltip } from "@/components/organize/user_tooltip";
 
 interface ReportItemProps {
   report: any;
@@ -33,7 +33,8 @@ export default function ReportItem({
         className="w-full px-6 py-4 flex justify-between items-center hover:bg-slate-50 transition-colors text-left"
       >
         <span className="text-sm font-bold text-slate-700">
-          {report.author_name} ({formatDateToJst(report.created_at)})
+          <UserTooltip userId={report.user_id} name={report.author_name} /> (
+          {formatDateToJst(report.created_at)})
         </span>
         {isOpen ? (
           <ChevronDown className="w-5 h-5 text-slate-400" />
@@ -55,11 +56,7 @@ export default function ReportItem({
                     {section.title}
                   </h3>
                 )}
-                <div className="prose prose-slate prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {section.content}
-                  </ReactMarkdown>
-                </div>
+                <Markdown content={section.content} />
               </div>
             ))}
           </div>

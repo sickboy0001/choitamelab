@@ -2,9 +2,11 @@
 
 import CommentForm from "./comment_form";
 import { formatDateToJst } from "@/lib/date";
+import { UserTooltip } from "./user_tooltip";
 
 interface Comment {
   id: string;
+  user_id: string | null;
   author_name: string | null;
   guest_name: string | null;
   content: string;
@@ -38,7 +40,14 @@ export default function CommentList({
               >
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-bold text-slate-700">
-                    {comment.author_name || comment.guest_name || "ゲスト"}
+                    {comment.author_name && comment.user_id ? (
+                      <UserTooltip
+                        userId={comment.user_id}
+                        name={comment.author_name}
+                      />
+                    ) : (
+                      comment.guest_name || "ゲスト"
+                    )}
                   </span>
                   <span className="text-[10px] text-slate-400">
                     {formatDateToJst(comment.created_at)}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatDateToJst } from "@/lib/date";
+import { UserTooltip } from "@/components/organize/user_tooltip";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -16,6 +17,7 @@ interface ReportSummaryItem {
   request_appeal_point: string;
   request_updated_at: string;
   request_author_name: string;
+  request_user_id: string; // 必要
   report_id: string;
   report_content: string;
   report_updated_at: string;
@@ -114,7 +116,11 @@ export default function ReportsList({
                       {formatDateToJst(report.request_updated_at, "yyyy-MM-dd")}
                     </span>
                     <span className="text-xs font-medium text-slate-600">
-                      作成者: {report.request_author_name}
+                      作成者:{" "}
+                      <UserTooltip
+                        userId={report.request_user_id}
+                        name={report.request_author_name}
+                      />
                     </span>
                   </div>
                 </div>
@@ -129,7 +135,10 @@ export default function ReportsList({
                       最新の報告
                     </span>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <span>{report.report_author_name}</span>
+                      <UserTooltip
+                        userId={report.report_author_id}
+                        name={report.report_author_name}
+                      />
                       <span>•</span>
                       <span>
                         {formatDateToJst(

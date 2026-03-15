@@ -2,27 +2,33 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Mail, Twitter, Save } from "lucide-react";
+import { User, Mail, Save, FileText, AlignLeft } from "lucide-react";
+import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
 
 interface ProfileProps {
   user: {
     id: string;
     email: string;
     display_name: string;
-    twitter_account?: string;
+    self_intro_text?: string;
+    self_intro_markdown?: string;
     is_admin: boolean;
   };
   updateAction: (data: {
     display_name: string;
-    twitter_account?: string;
+    self_intro_text?: string;
+    self_intro_markdown?: string;
   }) => Promise<void>;
 }
 
 export default function Profile({ user, updateAction }: ProfileProps) {
   const router = useRouter();
   const [displayName, setDisplayName] = useState(user.display_name || "");
-  const [twitterAccount, setTwitterAccount] = useState(
-    user.twitter_account || "",
+  const [selfIntroText, setSelfIntroText] = useState(
+    user.self_intro_text || "",
+  );
+  const [selfIntroMarkdown, setSelfIntroMarkdown] = useState(
+    user.self_intro_markdown || "",
   );
   const [isPending, setIsPending] = useState(false);
   const [message, setMessage] = useState<{
@@ -38,7 +44,8 @@ export default function Profile({ user, updateAction }: ProfileProps) {
     try {
       await updateAction({
         display_name: displayName,
-        twitter_account: twitterAccount,
+        self_intro_text: selfIntroText,
+        self_intro_markdown: selfIntroMarkdown,
       });
       setMessage({ type: "success", text: "プロファイルを更新しました" });
       router.refresh();
@@ -115,28 +122,45 @@ export default function Profile({ user, updateAction }: ProfileProps) {
               />
             </div>
 
-            {/* Twitter Account */}
+            {/* Self Intro Text */}
             <div className="space-y-2">
               <label
-                htmlFor="twitter_account"
+                htmlFor="self_intro_text"
                 className="text-sm font-bold text-slate-700 flex items-center gap-2"
               >
-                <Twitter size={16} className="text-slate-400" />
-                Twitter アカウント (ID)
+                <AlignLeft size={16} className="text-slate-400" />
+                短い自己紹介 (プレーンテキスト)
               </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                  @
-                </span>
-                <input
-                  id="twitter_account"
-                  type="text"
-                  value={twitterAccount}
-                  onChange={(e) => setTwitterAccount(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none"
-                  placeholder="twitter_id"
-                />
+              <input
+                id="self_intro_text"
+                type="text"
+                value={selfIntroText}
+                onChange={(e) => setSelfIntroText(e.target.value)}
+                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none"
+                placeholder="短い自己紹介文を入力"
+              />
+            </div>
+
+            {/* Self Intro Markdown */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="self_intro_markdown"
+                  className="text-sm font-bold text-slate-700 flex items-center gap-2"
+                >
+                  <FileText size={16} className="text-slate-400" />
+                  自己紹介詳細 (Markdown)
+                </label>
+                <MarkdownHelpSheet />
               </div>
+              <textarea
+                id="self_intro_markdown"
+                value={selfIntroMarkdown}
+                onChange={(e) => setSelfIntroMarkdown(e.target.value)}
+                rows={5}
+                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none font-mono text-sm"
+                placeholder="マークダウン形式で自己紹介を入力"
+              />
             </div>
 
             {/* Admin Badge (View Only) */}

@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Markdown } from "@/components/ui/markdown";
 import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
 
 interface RequestDetailProps {
@@ -59,11 +58,7 @@ export default function RequestReportDetail({
               <h3 className="font-bold text-slate-800 border-b border-slate-100 pb-2 mb-2">
                 {title}
               </h3>
-              <div className="prose prose-slate prose-sm max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {content}
-                </ReactMarkdown>
-              </div>
+              <Markdown content={content} />
             </div>
           );
         })}

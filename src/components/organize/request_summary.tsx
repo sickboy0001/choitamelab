@@ -1,7 +1,6 @@
 "use client";
 
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Markdown } from "@/components/ui/markdown";
 import { parseMarkdownSections } from "@/lib/markdown";
 
 interface RequestSummaryProps {
@@ -35,11 +34,7 @@ export function RequestSummary({
                 {section.title}
               </h3>
             )}
-            <div className="prose prose-slate prose-sm max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {section.content}
-              </ReactMarkdown>
-            </div>
+            <Markdown content={section.content} />
           </div>
         ))}
       </div>

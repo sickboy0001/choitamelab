@@ -6,7 +6,7 @@ export async function getUserProfile() {
   if (!session?.user?.id) return null;
 
   const res = await query(
-    "SELECT id, email, display_name, twitter_account, is_admin FROM users WHERE id = ?",
+    "SELECT id, email, display_name, self_intro_text, self_intro_markdown, is_admin, updated_at FROM users WHERE id = ?",
     [session.user.id],
   );
 
@@ -15,13 +15,19 @@ export async function getUserProfile() {
 
 export async function updateUserProfile(data: {
   display_name: string;
-  twitter_account?: string;
+  self_intro_text?: string;
+  self_intro_markdown?: string;
 }) {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Unauthorized");
 
   await query(
-    "UPDATE users SET display_name = ?, twitter_account = ? WHERE id = ?",
-    [data.display_name, data.twitter_account || null, session.user.id],
+    "UPDATE users SET display_name = ?, self_intro_text = ?, self_intro_markdown = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+    [
+      data.display_name,
+      data.self_intro_text || null,
+      data.self_intro_markdown || null,
+      session.user.id,
+    ],
   );
 }

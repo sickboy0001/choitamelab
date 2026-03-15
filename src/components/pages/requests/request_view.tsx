@@ -4,6 +4,7 @@ import Link from "next/link";
 import { RequestSummary } from "@/components/organize/request_summary";
 import CommentList from "@/components/organize/comment_list";
 import ReportItem from "@/components/organize/report_item";
+import { UserTooltip } from "@/components/organize/user_tooltip";
 
 interface RequestViewProps {
   id: string;
@@ -31,10 +32,11 @@ export default function RequestView({
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold text-slate-900">{request.title}</h1>
-          <p className="text-sm text-slate-500">
-            作成者: {request.author_name} | 作成日:{" "}
-            {new Date(request.created_at).toLocaleDateString()}
-          </p>
+          <div className="text-sm text-slate-500">
+            作成者:{" "}
+            <UserTooltip userId={request.user_id} name={request.author_name} />{" "}
+            | 作成日: {new Date(request.created_at).toLocaleDateString()}
+          </div>
         </div>
         {(isAuthor || isAdmin) && (
           <div className="flex items-center gap-2">

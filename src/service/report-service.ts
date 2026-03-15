@@ -7,7 +7,7 @@ export async function getRequestDetail(id: string) {
   const userId = session?.user?.id;
 
   const sql = `
-    SELECT r.*, u.display_name as author_name 
+    SELECT r.*, u.display_name as author_name
     FROM cit_requests r
     LEFT JOIN users u ON r.user_id = u.id
     WHERE r.id = ?
@@ -41,7 +41,7 @@ export async function getReportsByRequestId(requestId: string) {
   if (!request) return [];
 
   let sql = `
-    SELECT r.*, u.display_name as author_name 
+    SELECT r.*, u.display_name as author_name
     FROM cit_reports r
     LEFT JOIN users u ON r.user_id = u.id
     WHERE r.request_id = ?
@@ -137,7 +137,7 @@ export async function createReport(data: {
 
 export async function getReportDetail(id: string) {
   const sql = `
-    SELECT r.*, u.display_name as author_name 
+    SELECT r.*, u.display_name as author_name
     FROM cit_reports r
     LEFT JOIN users u ON r.user_id = u.id
     WHERE r.id = ?

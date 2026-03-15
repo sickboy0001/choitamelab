@@ -1,8 +1,7 @@
 "use client";
 
 import { HelpCircle } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Markdown } from "@/components/ui/markdown";
 import {
   Sheet,
   SheetClose,
@@ -36,11 +35,7 @@ export function MarkdownHelpSheet() {
           </SheetDescription>
         </SheetHeader>
         <div className="py-6 px-6">
-          <div className="prose prose-slate prose-sm max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {markdownHelpContent}
-            </ReactMarkdown>
-          </div>
+          <Markdown content={markdownHelpContent} />
         </div>
         <SheetFooter className="mt-6 border-t pt-4 px-6 pb-6">
           <SheetClose render={<Button variant="outline" className="w-full" />}>

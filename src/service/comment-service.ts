@@ -34,7 +34,7 @@ export async function getComments(
   targetId: string,
 ) {
   const sql = `
-    SELECT c.*, u.display_name as author_name 
+    SELECT c.*, u.display_name as author_name
     FROM cit_comments c
     LEFT JOIN users u ON c.user_id = u.id
     WHERE c.target_type = ? AND c.target_id = ?

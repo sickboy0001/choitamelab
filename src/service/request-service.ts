@@ -14,7 +14,7 @@ export async function getRequests() {
   // 3. 有効がTrueかつ公開(is_public)がTrue：非ログイン者も見れる
 
   let sql = `
-    SELECT r.*, u.display_name as author_name 
+    SELECT r.*, u.display_name as author_name
     FROM cit_requests r
     LEFT JOIN users u ON r.user_id = u.id
     WHERE 

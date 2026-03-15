@@ -6,9 +6,11 @@ export async function createTables() {
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE,
       display_name TEXT,
-      twitter_account TEXT,
+      self_intro_text TEXT,
+      self_intro_markdown TEXT,
       is_admin BOOLEAN DEFAULT 0,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS cit_requests (
       id TEXT PRIMARY KEY,

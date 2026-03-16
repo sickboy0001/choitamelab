@@ -551,19 +551,20 @@ export default async function handler(req, res) {
 色合い的には「 https://qiita.com/question-feed 」の鮮やかな橙色をベースにする形をイメージしています。
 
 ## TODO
-- [ ] GoogleAnalysetic 対応　他アプリも、公開するものは対応したほうがいい
 - [ ] パスワード忘れた場合、メールからパスワードリセットの画面
-- [ ] 報告一覧画面
-- [ ] コメント一覧画面
-- [ ] 依頼でのMarkdownでの表現
-- [ ] レポートでのMarkDownの表現
-- [ ] Twitterでの文面
-- [ ] Twtter連携 　投稿のテスト タイトル＋紹介文＋対処へのURL
-- [ ] ダッシュボード 叩き
 - [ ] ダッシュボード 機能アップ
 - [ ] forgetPassword　メールアドレスへメール　メールからURLを開く　URLでパスワード入力
 - [ ] create new account　メールアドレス　ユーザー名　パスワード入力
 - [ ] favicon精査
+- [ ] Vercel/og 対応
+- [x] GoogleAnalysetic 対応　他アプリも、公開するものは対応したほうがいい
+- [x] 報告一覧画面
+- [x] コメント一覧画面
+- [x] 依頼でのMarkdownでの表現
+- [x] レポートでのMarkDownの表現
+- [x] Twitterでの文面
+- [x] Twtter連携 　投稿のテスト タイトル＋紹介文＋対処へのURL
+- [x] ダッシュボード 叩き
 - [x] favicon案作成
 - [x] Api設計
 - [x] Markdown記載の案内

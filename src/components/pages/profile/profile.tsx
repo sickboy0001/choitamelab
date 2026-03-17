@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Mail, Save, FileText, AlignLeft } from "lucide-react";
+import { User, Mail, Save, FileText } from "lucide-react";
 import { MarkdownHelpSheet } from "@/components/organize/markdown_help_sheet";
 
 interface ProfileProps {
@@ -10,13 +10,11 @@ interface ProfileProps {
     id: string;
     email: string;
     display_name: string;
-    self_intro_text?: string;
     self_intro_markdown?: string;
     is_admin: boolean;
   };
   updateAction: (data: {
     display_name: string;
-    self_intro_text?: string;
     self_intro_markdown?: string;
   }) => Promise<void>;
 }
@@ -24,9 +22,6 @@ interface ProfileProps {
 export default function Profile({ user, updateAction }: ProfileProps) {
   const router = useRouter();
   const [displayName, setDisplayName] = useState(user.display_name || "");
-  const [selfIntroText, setSelfIntroText] = useState(
-    user.self_intro_text || "",
-  );
   const [selfIntroMarkdown, setSelfIntroMarkdown] = useState(
     user.self_intro_markdown || "",
   );
@@ -44,7 +39,6 @@ export default function Profile({ user, updateAction }: ProfileProps) {
     try {
       await updateAction({
         display_name: displayName,
-        self_intro_text: selfIntroText,
         self_intro_markdown: selfIntroMarkdown,
       });
       setMessage({ type: "success", text: "プロファイルを更新しました" });
@@ -119,25 +113,6 @@ export default function Profile({ user, updateAction }: ProfileProps) {
                 required
                 className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none"
                 placeholder="ユーザー名を入力"
-              />
-            </div>
-
-            {/* Self Intro Text */}
-            <div className="space-y-2">
-              <label
-                htmlFor="self_intro_text"
-                className="text-sm font-bold text-slate-700 flex items-center gap-2"
-              >
-                <AlignLeft size={16} className="text-slate-400" />
-                短い自己紹介 (プレーンテキスト)
-              </label>
-              <input
-                id="self_intro_text"
-                type="text"
-                value={selfIntroText}
-                onChange={(e) => setSelfIntroText(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none"
-                placeholder="短い自己紹介文を入力"
               />
             </div>
 

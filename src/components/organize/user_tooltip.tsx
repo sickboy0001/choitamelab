@@ -13,7 +13,6 @@ interface UserTooltipProps {
 
 interface UserProfile {
   display_name: string;
-  self_intro_text: string | null;
   self_intro_markdown: string | null;
 }
 
@@ -50,7 +49,6 @@ export function UserTooltip({ userId, name }: UserTooltipProps) {
         if (data) {
           setProfile({
             display_name: data.display_name,
-            self_intro_text: data.self_intro_text,
             self_intro_markdown: data.self_intro_markdown,
           });
         }
@@ -105,12 +103,6 @@ export function UserTooltip({ userId, name }: UserTooltipProps) {
                     {profile.display_name}
                   </div>
 
-                  {profile.self_intro_text && (
-                    <p className="text-sm text-slate-600 leading-relaxed">
-                      {profile.self_intro_text}
-                    </p>
-                  )}
-
                   {profile.self_intro_markdown && (
                     <Markdown
                       content={profile.self_intro_markdown}
@@ -118,7 +110,7 @@ export function UserTooltip({ userId, name }: UserTooltipProps) {
                     />
                   )}
 
-                  {!profile.self_intro_text && !profile.self_intro_markdown && (
+                  {!profile.self_intro_markdown && (
                     <p className="text-xs text-slate-400 italic">
                       自己紹介はありません
                     </p>

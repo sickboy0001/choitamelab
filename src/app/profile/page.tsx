@@ -11,7 +11,6 @@ export default async function ProfilePage() {
 
   const updateAction = async (data: {
     display_name: string;
-    self_intro_text?: string;
     self_intro_markdown?: string;
   }) => {
     "use server";

@@ -6,7 +6,6 @@ export async function createTables() {
       id TEXT PRIMARY KEY,
       email TEXT UNIQUE,
       display_name TEXT,
-      self_intro_text TEXT,
       self_intro_markdown TEXT,
       is_admin BOOLEAN DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,

@@ -7,7 +7,7 @@ export async function getPublicUserProfile(userId: string) {
 
   try {
     const res = await query(
-      "SELECT id, display_name, self_intro_text, self_intro_markdown FROM users WHERE id = ?",
+      "SELECT id, display_name, self_intro_markdown FROM users WHERE id = ?",
       [userId],
     );
 
@@ -17,7 +17,6 @@ export async function getPublicUserProfile(userId: string) {
     return {
       id: row.id as string,
       display_name: row.display_name as string,
-      self_intro_text: (row.self_intro_text as string) || null,
       self_intro_markdown: (row.self_intro_markdown as string) || null,
     };
   } catch (error) {

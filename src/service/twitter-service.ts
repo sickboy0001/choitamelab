@@ -79,7 +79,7 @@ export async function postTweet(requestId: string) {
   if (!request) return;
 
   const url = `https://choitamelab.vercel.app/requests/${request.id}`;
-  const text = `${request.title}\n${request.appeal_point}\n${url}\n#ChoitameLab #検証依頼`;
+  const text = `「${request.title}」\n${request.appeal_point}\n\n${url}\n\n#ChoitameLab #検証依頼`;
 
   console.log("Tweeting:", text);
 

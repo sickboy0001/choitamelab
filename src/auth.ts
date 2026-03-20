@@ -46,32 +46,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         try {
           // ユーザーの取得
           const userRes = await query(
-            "SELECT id, email, display_name, is_admin FROM users WHERE email = ?",
+            "SELECT id, email, display_name, is_admin, email_verified FROM users WHERE email = ?",
             [email],
           );
 
           if (userRes.rows.length === 0) {
-            // 新規ユーザーの場合：パスワードがメールアドレスと一致すれば作成
-            if (password === email) {
-              const id = crypto.randomUUID();
-              const displayName = email.split("@")[0];
-              await query(
-                "INSERT INTO users (id, email, display_name) VALUES (?, ?, ?)",
-                [id, email, displayName],
-              );
-              const hashedPassword = await bcrypt.hash(password, 10);
-              await query(
-                "INSERT INTO user_passwords (user_id, password_hash) VALUES (?, ?)",
-                [id, hashedPassword],
-              );
-              return { id, email, name: displayName, isAdmin: false };
-            }
             return null;
           }
 
           const user = userRes.rows[0];
           const userId = user.id as string;
           const isAdmin = !!user.is_admin;
+
+          // メール承認チェック
+          if (!user.email_verified) {
+            throw new Error("Email not verified");
+          }
 
           // パスワードの取得
           const passRes = await query(

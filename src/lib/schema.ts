@@ -8,8 +8,19 @@ export async function createTables() {
       display_name TEXT,
       self_intro_markdown TEXT,
       is_admin BOOLEAN DEFAULT 0,
+      email_verified TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS email_verify_tokens (
+      email TEXT PRIMARY KEY,
+      token_hash TEXT NOT NULL,
+      expires_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      email TEXT PRIMARY KEY,
+      token_hash TEXT NOT NULL,
+      expires_at TEXT NOT NULL
     )`,
     `CREATE TABLE IF NOT EXISTS cit_requests (
       id TEXT PRIMARY KEY,

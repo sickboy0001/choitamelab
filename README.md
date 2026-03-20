@@ -551,6 +551,7 @@ export default async function handler(req, res) {
 色合い的には「 https://qiita.com/question-feed 」の鮮やかな橙色をベースにする形をイメージしています。
 
 ## TODO
+- [ ] メール承認、別システムで実装済み
 - [ ] パスワード忘れた場合、メールからパスワードリセットの画面
 - [ ] ダッシュボード 機能アップ
 - [ ] forgetPassword　メールアドレスへメール　メールからURLを開く　URLでパスワード入力
@@ -569,6 +570,7 @@ export default async function handler(req, res) {
 - [x] Api設計
 - [x] Markdown記載の案内
 - [x] GitHubActionからのコール
+
 
 ## hitory
 - 2026/03/14

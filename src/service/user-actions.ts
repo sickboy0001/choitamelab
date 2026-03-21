@@ -1,6 +1,7 @@
 "use server";
 
 import { query } from "@/lib/db";
+import { getRecentUpdatedUsers } from "./user-service";
 
 export async function getPublicUserProfile(userId: string) {
   if (!userId) return null;
@@ -23,4 +24,8 @@ export async function getPublicUserProfile(userId: string) {
     console.error("Failed to fetch public user profile:", error);
     return null;
   }
+}
+
+export async function getRecentUpdatedUsersAction(limit: number = 3) {
+  return await getRecentUpdatedUsers(limit);
 }

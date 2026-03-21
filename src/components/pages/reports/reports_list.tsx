@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatDateToJst } from "@/lib/date";
 import { UserTooltip } from "@/components/organize/user_tooltip";
+import {
+  getLatestReportsAction,
+  getMyReportsAction,
+} from "@/app/reports/actions";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -17,28 +21,73 @@ interface ReportSummaryItem {
   request_appeal_point: string;
   request_updated_at: string;
   request_author_name: string;
-  request_user_id: string; // 必要
+  request_user_id: string;
   report_id: string;
   report_content: string;
   report_updated_at: string;
   report_author_name: string;
   report_author_id: string;
+  is_public: boolean;
+  is_active: boolean;
+  request_is_public: boolean;
+  request_is_active: boolean;
 }
 
 interface ReportsListProps {
-  reports: ReportSummaryItem[];
-  myReports: ReportSummaryItem[];
+  reports?: ReportSummaryItem[];
+  myReports?: ReportSummaryItem[];
   isLoggedIn: boolean;
+  limit?: number;
+  hideTitle?: boolean;
+  onlyPublic?: boolean;
 }
 
 export default function ReportsList({
-  reports,
-  myReports,
+  reports: initialReports,
+  myReports: initialMyReports,
   isLoggedIn,
+  limit,
+  hideTitle = false,
+  onlyPublic = false,
 }: ReportsListProps) {
   const [activeTab, setActiveTab] = useState<"all" | "mine">("all");
+  const [reports, setReports] = useState<ReportSummaryItem[]>(
+    initialReports || [],
+  );
+  const [myReports, setMyReports] = useState<ReportSummaryItem[]>(
+    initialMyReports || [],
+  );
+  const [isLoading, setIsLoading] = useState(!initialReports);
 
-  const displayReports = activeTab === "all" ? reports : myReports;
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        if (!initialReports) {
+          const fetchedReports = await getLatestReportsAction();
+          setReports(fetchedReports as any);
+        }
+        if (isLoggedIn && !initialMyReports) {
+          const fetchedMyReports = await getMyReportsAction();
+          setMyReports(fetchedMyReports as any);
+        }
+      } catch (error) {
+        console.error("Failed to fetch reports:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReports();
+  }, [initialReports, initialMyReports, isLoggedIn]);
+
+  const filteredByTab = activeTab === "all" ? reports : myReports;
+
+  const filteredByPublic = onlyPublic
+    ? filteredByTab.filter((rep) => rep.is_public && rep.request_is_public)
+    : filteredByTab;
+
+  const displayReports = limit
+    ? filteredByPublic.slice(0, limit)
+    : filteredByPublic;
 
   // Markdownの記法を除去してプレーンテキストにする簡易関数
   const stripMarkdown = (text: string) => {
@@ -49,38 +98,48 @@ export default function ReportsList({
       .trim();
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <div className="animate-spin h-6 w-6 border-2 border-orange-500 rounded-full border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-slate-900">検証報告一覧</h1>
+      {!hideTitle && (
+        <div className="space-y-4">
+          <h1 className="text-2xl font-bold text-slate-900">検証報告一覧</h1>
 
-        {isLoggedIn && (
-          <div className="flex border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab("all")}
-              className={cn(
-                "px-6 py-2 text-sm font-medium transition-colors relative",
-                activeTab === "all"
-                  ? "text-orange-600 border-b-2 border-orange-600"
-                  : "text-slate-500 hover:text-slate-700",
-              )}
-            >
-              最新の報告一覧
-            </button>
-            <button
-              onClick={() => setActiveTab("mine")}
-              className={cn(
-                "px-6 py-2 text-sm font-medium transition-colors relative",
-                activeTab === "mine"
-                  ? "text-orange-600 border-b-2 border-orange-600"
-                  : "text-slate-500 hover:text-slate-700",
-              )}
-            >
-              投稿した報告の一覧
-            </button>
-          </div>
-        )}
-      </div>
+          {isLoggedIn && (
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab("all")}
+                className={cn(
+                  "px-6 py-2 text-sm font-medium transition-colors relative",
+                  activeTab === "all"
+                    ? "text-orange-600 border-b-2 border-orange-600"
+                    : "text-slate-500 hover:text-slate-700",
+                )}
+              >
+                最新の報告一覧
+              </button>
+              <button
+                onClick={() => setActiveTab("mine")}
+                className={cn(
+                  "px-6 py-2 text-sm font-medium transition-colors relative",
+                  activeTab === "mine"
+                    ? "text-orange-600 border-b-2 border-orange-600"
+                    : "text-slate-500 hover:text-slate-700",
+                )}
+              >
+                投稿した報告の一覧
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="grid gap-6">
         {displayReports.length === 0 ? (

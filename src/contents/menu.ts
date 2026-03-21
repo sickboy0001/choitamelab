@@ -15,6 +15,7 @@ export interface MenuItem {
   bgColorClass: string;
   isAdminOnly?: boolean;
   isLoginOnly?: boolean;
+  isVisible?: boolean;
 }
 
 export const menuDashboard: MenuItem[] = [
@@ -63,5 +64,6 @@ export const menuDashboard: MenuItem[] = [
     bgColorClass: "bg-orange-100",
     isLoginOnly: true,
     isAdminOnly: true,
+    isVisible: false,
   },
 ];

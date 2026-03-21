@@ -25,3 +25,11 @@ export async function updateUserProfile(data: {
     [data.display_name, data.self_intro_markdown || null, session.user.id],
   );
 }
+
+export async function getRecentUpdatedUsers(limit: number = 3) {
+  const res = await query(
+    "SELECT id, display_name, updated_at FROM users ORDER BY updated_at DESC LIMIT ?",
+    [limit],
+  );
+  return res.rows;
+}

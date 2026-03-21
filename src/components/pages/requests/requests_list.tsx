@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserTooltip } from "@/components/organize/user_tooltip";
+import { getRequestsAction } from "@/app/requests/actions";
 
 interface RequestItem {
   id: string;
@@ -16,38 +17,82 @@ interface RequestItem {
 }
 
 interface RequestsListProps {
-  requests: RequestItem[];
+  requests?: RequestItem[];
   hasSession: boolean;
   userId?: string;
+  limit?: number;
+  hideTitle?: boolean;
+  onlyPublic?: boolean;
 }
 
 export default function RequestsList({
-  requests,
+  requests: initialRequests,
   hasSession,
   userId,
+  limit,
+  hideTitle = false,
+  onlyPublic = false,
 }: RequestsListProps) {
   const [activeTab, setActiveTab] = useState<"all" | "mine">("all");
+  const [requests, setRequests] = useState<RequestItem[]>(
+    initialRequests || [],
+  );
+  const [isLoading, setIsLoading] = useState(!initialRequests);
 
-  const displayRequests =
+  useEffect(() => {
+    if (!initialRequests) {
+      const fetchRequests = async () => {
+        try {
+          const fetchedRequests = await getRequestsAction();
+          setRequests(fetchedRequests as any);
+        } catch (error) {
+          console.error("Failed to fetch requests:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchRequests();
+    }
+  }, [initialRequests]);
+
+  const filteredByTab =
     activeTab === "all"
       ? requests
       : requests.filter((req) => req.user_id === userId);
 
+  const filteredByPublic = onlyPublic
+    ? filteredByTab.filter((req) => req.is_public)
+    : filteredByTab;
+
+  const displayRequests = limit
+    ? filteredByPublic.slice(0, limit)
+    : filteredByPublic;
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <div className="animate-spin h-6 w-6 border-2 border-orange-500 rounded-full border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-800">検証依頼一覧</h1>
-        {hasSession && (
-          <Link
-            href="/requests/new"
-            className="px-4 py-2 bg-orange-600 text-white rounded-md text-sm font-medium hover:bg-orange-700"
-          >
-            依頼を作成
-          </Link>
-        )}
-      </div>
+      {!hideTitle && (
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-slate-800">検証依頼一覧</h1>
+          {hasSession && (
+            <Link
+              href="/requests/new"
+              className="px-4 py-2 bg-orange-600 text-white rounded-md text-sm font-medium hover:bg-orange-700"
+            >
+              依頼を作成
+            </Link>
+          )}
+        </div>
+      )}
 
-      {hasSession && (
+      {hasSession && !hideTitle && (
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             <button

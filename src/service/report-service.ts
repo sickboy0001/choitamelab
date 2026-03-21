@@ -227,7 +227,11 @@ export async function getLatestReportsPerRequest() {
       rep.content_markdown as report_content,
       rep.updated_at as report_updated_at,
       u.display_name as report_author_name,
-      rep.user_id as report_author_id
+      rep.user_id as report_author_id,
+      rep.is_public,
+      rep.is_active,
+      req.is_public as request_is_public,
+      req.is_active as request_is_active
     FROM cit_requests req
     INNER JOIN latest_reports lr ON req.id = lr.request_id AND lr.rn = 1
     INNER JOIN cit_reports rep ON lr.report_id = rep.id

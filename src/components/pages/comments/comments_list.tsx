@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { MessageSquare, User } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { formatDateToJst } from "@/lib/date";
 import { UserTooltip } from "@/components/organize/user_tooltip";
+import { useEffect, useState } from "react";
+import { getRecentCommentsAction } from "@/app/comments/actions";
 
 interface CommentSummaryItem {
   id: string;
@@ -19,26 +21,92 @@ interface CommentSummaryItem {
   display_request_title: string;
   display_request_id: string;
   report_id: string | null;
+  request_is_public: number | boolean;
+  report_is_public?: number | boolean;
 }
 
 interface CommentsListProps {
-  comments: CommentSummaryItem[];
+  comments?: CommentSummaryItem[];
+  limit?: number;
+  hideTitle?: boolean;
+  onlyPublic?: boolean;
 }
 
-export default function CommentsList({ comments }: CommentsListProps) {
+export default function CommentsList({
+  comments: initialComments,
+  limit,
+  hideTitle = false,
+  onlyPublic = false,
+}: CommentsListProps) {
+  const [comments, setComments] = useState<CommentSummaryItem[]>(
+    initialComments || [],
+  );
+  const [isLoading, setIsLoading] = useState(!initialComments);
+
+  useEffect(() => {
+    if (!initialComments) {
+      const fetchComments = async () => {
+        try {
+          const fetchedComments = await getRecentCommentsAction();
+          setComments(fetchedComments as any);
+        } catch (error) {
+          console.error("Failed to fetch comments:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchComments();
+    }
+  }, [initialComments]);
+
+  const filteredComments = onlyPublic
+    ? comments.filter((c) => {
+        // DBから 1/0 (number) で返ってくる可能性があるため柔軟にチェック
+        const isRequestPublic =
+          c.request_is_public === 1 || c.request_is_public === true;
+        const isReportPublic =
+          c.report_is_public === 1 ||
+          c.report_is_public === true ||
+          c.report_is_public === null ||
+          c.report_is_public === undefined;
+
+        if (c.target_type === "request") {
+          return isRequestPublic;
+        } else {
+          return isRequestPublic && isReportPublic;
+        }
+      })
+    : comments;
+
+  const displayComments = limit
+    ? filteredComments.slice(0, limit)
+    : filteredComments;
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <div className="animate-spin h-6 w-6 border-2 border-orange-500 rounded-full border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">最新コメント一覧</h1>
-      </div>
+      {!hideTitle && (
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-slate-900">
+            最新コメント一覧
+          </h1>
+        </div>
+      )}
 
       <div className="space-y-4">
-        {comments.length === 0 ? (
+        {displayComments.length === 0 ? (
           <div className="text-center py-12 bg-white border border-dashed border-slate-300 rounded-lg">
             <p className="text-slate-500">まだコメントはありません。</p>
           </div>
         ) : (
-          comments.map((comment) => (
+          displayComments.map((comment) => (
             <div
               key={comment.id}
               className="bg-white border border-slate-200 rounded-xl shadow-sm p-5 hover:border-orange-200 transition-colors"

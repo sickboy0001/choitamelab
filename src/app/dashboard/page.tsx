@@ -8,6 +8,7 @@ export default async function DashboardPage() {
   // ログインしていなくても表示できるようにリダイレクトを削除
   return (
     <Dashboard
+      userId={session?.user?.id}
       userName={session?.user?.name}
       isAdmin={isAdministrator(session?.user?.email)}
       isLoggedIn={!!session}

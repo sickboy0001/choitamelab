@@ -81,7 +81,9 @@ export async function getAllRecentComments() {
       req.title as request_title,
       rep.id as report_id,
       COALESCE(req.title, req_from_rep.title) as display_request_title,
-      COALESCE(req.id, req_from_rep.id) as display_request_id
+      COALESCE(req.id, req_from_rep.id) as display_request_id,
+      COALESCE(req.is_public, req_from_rep.is_public) as request_is_public,
+      rep.is_public as report_is_public
     FROM cit_comments c
     LEFT JOIN users u ON c.user_id = u.id
     LEFT JOIN cit_requests req ON c.target_type = 'request' AND c.target_id = req.id
@@ -104,7 +106,9 @@ export async function getAllRecentComments() {
       req.title as request_title,
       rep.id as report_id,
       COALESCE(req.title, req_from_rep.title) as display_request_title,
-      COALESCE(req.id, req_from_rep.id) as display_request_id
+      COALESCE(req.id, req_from_rep.id) as display_request_id,
+      COALESCE(req.is_public, req_from_rep.is_public) as request_is_public,
+      rep.is_public as report_is_public
     FROM cit_comments c
     LEFT JOIN users u ON c.user_id = u.id
     LEFT JOIN cit_requests req ON c.target_type = 'request' AND c.target_id = req.id

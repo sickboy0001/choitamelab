@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { getPublicUserProfile } from "@/service/user-actions";
 import {
   Menu,
   X,
@@ -34,7 +35,22 @@ export default function Navigation({
   children,
 }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [displayName, setDisplayName] = useState<string | null>(
+    session?.user?.name || null,
+  );
   const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (session?.user?.id) {
+        const profile = await getPublicUserProfile(session.user.id);
+        if (profile?.display_name) {
+          setDisplayName(profile.display_name);
+        }
+      }
+    };
+    fetchUserProfile();
+  }, [session?.user?.id]);
 
   const navItems = [
     { href: "/dashboard", label: "ダッシュボード", icon: LayoutDashboard },
@@ -75,7 +91,7 @@ export default function Navigation({
                 </span>
               )}
               <span className="text-sm font-medium text-slate-700 hidden sm:inline-block">
-                {session.user?.name}
+                {displayName || session.user?.email}
               </span>
               <div className="group relative">
                 {session.user?.image ? (
@@ -86,7 +102,7 @@ export default function Navigation({
                   />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer">
-                    {(session.user?.name || session.user?.email || "U")
+                    {(displayName || session.user?.email || "U")
                       .charAt(0)
                       .toUpperCase()}
                   </div>

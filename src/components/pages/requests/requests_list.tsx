@@ -175,7 +175,7 @@ export default function RequestsList({
                     )}
                   </div>
                 </div>
-                <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                <p className="text-lg text-slate-600 mb-4 line-clamp-2">
                   {req.appeal_point}
                 </p>
                 <div className="flex justify-between items-center text-xs text-slate-400">

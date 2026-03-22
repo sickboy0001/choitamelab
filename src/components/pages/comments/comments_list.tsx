@@ -139,7 +139,7 @@ export default function CommentsList({
                     </div>
                   </div>
 
-                  <p className="text-slate-700 whitespace-pre-wrap text-sm">
+                  <p className="text-slate-700 whitespace-pre-wrap text-lg">
                     {comment.content}
                   </p>
 

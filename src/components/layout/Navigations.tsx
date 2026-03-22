@@ -156,7 +156,7 @@ export default function Navigation({
         {showSidebar && (
           <aside
             className={cn(
-              "fixed inset-y-0 left-0 w-64 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block",
+              "fixed inset-y-0 left-0 w-64 md:w-80 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block",
               isOpen ? "translate-x-0" : "-translate-x-full",
             )}
           >
@@ -182,13 +182,13 @@ export default function Navigation({
                     href={item.href}
                     onClick={closeMenu}
                     className={cn(
-                      "flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors",
+                      "flex items-center px-4 py-2 md:py-3 text-sm md:text-xl font-medium rounded-md transition-colors",
                       isActive
                         ? "bg-orange-100 text-orange-700"
                         : "text-slate-700 hover:bg-gray-200 hover:text-slate-900",
                     )}
                   >
-                    <Icon size={18} className="mr-3" />
+                    <Icon size={18} className="mr-3 md:w-7 md:h-7" />
                     {item.label}
                   </Link>
                 );

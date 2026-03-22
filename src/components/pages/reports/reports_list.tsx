@@ -165,7 +165,7 @@ export default function ReportsList({
                     <h2 className="text-lg font-bold text-slate-800 group-hover:text-orange-600 transition-colors">
                       {report.request_title}
                     </h2>
-                    <p className="text-sm text-slate-600 line-clamp-1 mt-1">
+                    <p className="text-lg text-slate-600 line-clamp-1 mt-1">
                       {report.request_appeal_point}
                     </p>
                   </Link>
@@ -185,7 +185,7 @@ export default function ReportsList({
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-sm text-slate-700 truncate">
+                <p className="text-lg text-slate-700 truncate">
                   {stripMarkdown(report.report_content)}
                 </p>
                 <div className="mt-4 flex justify-between items-end">

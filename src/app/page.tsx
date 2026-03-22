@@ -184,9 +184,11 @@ export default async function Home() {
       <footer className="py-12 bg-white border-t border-slate-100">
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-orange-600">Choitame</span>
+            <span className="text-2xl font-bold text-orange-600">
+              Choitamelab
+            </span>
             <span className="text-slate-400 text-sm">
-              © 2026 Choitame Team.
+              © 2026 Choitamelab Team.
             </span>
           </div>
           <div className="flex gap-8 text-sm text-slate-600 font-medium">

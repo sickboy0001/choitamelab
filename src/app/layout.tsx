@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import { auth, signIn, signOut } from "@/auth";
 import Navigation from "@/components/layout/Navigations";
+import Footer from "@/components/layout/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
@@ -52,10 +53,7 @@ export default async function RootLayout({
           <main className="flex-1 bg-white">{children}</main>
         </Navigation>
 
-        {/* Footer */}
-        <footer className="bg-gray-50 border-t border-gray-200 p-6 text-center text-sm text-slate-500">
-          &copy; 2026 Choitame. All rights reserved.
-        </footer>
+        <Footer />
         <GoogleAnalytics gaId="G-NJ2V7CT80L" />
       </body>
     </html>

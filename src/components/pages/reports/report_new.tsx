@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface RequestDetailProps {
+interface ReportNewProps {
   requestId: string;
   requestTitle: string;
   requestAppealPoint: string;
@@ -22,7 +22,7 @@ interface RequestDetailProps {
   action: (formData: FormData) => Promise<void>;
 }
 
-export default function RequestReportDetail({
+export default function ReportNew({
   requestId,
   requestTitle,
   requestAppealPoint,
@@ -30,7 +30,7 @@ export default function RequestReportDetail({
   isRequestActive,
   isRequestPublic,
   action,
-}: RequestDetailProps) {
+}: ReportNewProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewMarkdown, setPreviewMarkdown] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
@@ -43,7 +43,7 @@ export default function RequestReportDetail({
     }
   };
 
-  // Markdownを「##」で分割してカード化する
+  // Markdown を「##」で分割してカード化する
   const sections = requestContentMarkdown
     .split(/(?=^##\s+)/m)
     .filter((section) => section.trim() !== "");
@@ -52,7 +52,7 @@ export default function RequestReportDetail({
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold text-slate-800">
-          報告を投稿する: {requestTitle}
+          報告を投稿する：{requestTitle}
         </h1>
       </div>
 
@@ -112,9 +112,14 @@ export default function RequestReportDetail({
                 className="w-4 h-4 text-orange-600"
                 disabled={!isRequestActive}
               />
-              <span className="text-sm font-medium text-slate-700">
-                有効にする {!isRequestActive && "(依頼が下書きのため固定)"}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-slate-700">
+                  有効にする {!isRequestActive && "(依頼が下書きのため固定)"}
+                </span>
+                <span className="text-xs text-slate-500">
+                  状態管理：オンで「提出済み」、オフで「下書き」
+                </span>
+              </div>
             </label>
             <label
               className={`flex items-center gap-2 cursor-pointer ${!isRequestPublic ? "opacity-50 grayscale" : ""}`}
@@ -126,9 +131,14 @@ export default function RequestReportDetail({
                 className="w-4 h-4 text-orange-600"
                 disabled={!isRequestPublic}
               />
-              <span className="text-sm font-medium text-slate-700">
-                公開する {!isRequestPublic && "(依頼が非公開のため固定)"}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-slate-700">
+                  公開する {!isRequestPublic && "(依頼が非公開のため固定)"}
+                </span>
+                <span className="text-xs text-slate-500">
+                  権限管理：オンで「誰でも閲覧可能」、オフで「閲覧者限定」
+                </span>
+              </div>
             </label>
           </div>
           <p className="text-xs text-slate-500">

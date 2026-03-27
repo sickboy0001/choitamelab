@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { getRequestDetail, createReport } from "@/service/report-service";
-import RequestReportDetail from "@/components/pages/reports/report_detail";
+import ReportNew from "@/components/pages/reports/report_new";
 
 export default async function NewReportPage({
   params,
@@ -32,7 +32,7 @@ export default async function NewReportPage({
   }
 
   return (
-    <RequestReportDetail
+    <ReportNew
       requestId={requestId}
       requestTitle={request.title}
       requestAppealPoint={request.appeal_point}

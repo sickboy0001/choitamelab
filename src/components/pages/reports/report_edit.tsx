@@ -96,8 +96,7 @@ export default function ReportEdit({
                   有効にする {!isRequestActive && "(依頼が下書きのため固定)"}
                 </span>
                 <span className="text-xs text-slate-500">
-                  状態管理：
-                  {initialIsActive ? "正式提出済み" : "下書き（未提出）"}
+                  状態管理：オンで「提出済み」、オフで「下書き」
                 </span>
               </div>
             </label>
@@ -116,10 +115,7 @@ export default function ReportEdit({
                   公開する {!isRequestPublic && "(依頼が非公開のため固定)"}
                 </span>
                 <span className="text-xs text-slate-500">
-                  権限管理：
-                  {initialIsPublic
-                    ? "誰でも閲覧可能"
-                    : "依頼者・管理者のみ閲覧可能"}
+                  権限管理：オンで「誰でも閲覧可能」、オフで「閲覧者限定」
                 </span>
               </div>
             </label>

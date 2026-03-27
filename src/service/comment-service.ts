@@ -50,31 +50,8 @@ export async function getAllRecentComments() {
 
   // 全てのコメントを取得し、関連する依頼や報告の情報を結合する
   // 権限チェックも行う（依頼が見れるかどうか）
-  const sql = `
-    SELECT 
-      c.*,
-      u.display_name as author_name,
-      req.id as request_id,
-      req.title as request_title,
-      rep.id as report_id
-    FROM cit_comments c
-    LEFT JOIN users u ON c.user_id = u.id
-    -- 依頼へのコメントの場合
-    LEFT JOIN cit_requests req ON c.target_type = 'request' AND c.target_id = req.id
-    -- 報告へのコメントの場合、報告を経由して依頼を取得
-    LEFT JOIN cit_reports rep ON c.target_type = 'report' AND c.target_id = rep.id
-    LEFT JOIN cit_requests req_from_rep ON rep.request_id = req_from_rep.id
-    WHERE 
-      (
-        (c.target_type = 'request' AND (req.user_id = ? OR req.is_active = 1))
-        OR 
-        (c.target_type = 'report' AND (req_from_rep.user_id = ? OR req_from_rep.is_active = 1))
-      )
-  `;
-
-  // 未ログイン時の条件
-  const publicOnlySql = `
-    SELECT 
+  const loggedInSql = `
+    SELECT
       c.*,
       u.display_name as author_name,
       req.id as request_id,
@@ -89,17 +66,18 @@ export async function getAllRecentComments() {
     LEFT JOIN cit_requests req ON c.target_type = 'request' AND c.target_id = req.id
     LEFT JOIN cit_reports rep ON c.target_type = 'report' AND c.target_id = rep.id
     LEFT JOIN cit_requests req_from_rep ON rep.request_id = req_from_rep.id
-    WHERE 
+    WHERE
       (
-        (c.target_type = 'request' AND req.is_active = 1 AND req.is_public = 1)
-        OR 
-        (c.target_type = 'report' AND req_from_rep.is_active = 1 AND req_from_rep.is_public = 1)
+        (c.target_type = 'request' AND (req.user_id = ? OR req.is_active = 1))
+        OR
+        (c.target_type = 'report' AND (req_from_rep.user_id = ? OR req_from_rep.is_active = 1))
       )
     ORDER BY c.updated_at DESC
   `;
 
-  const loggedInSql = `
-    SELECT 
+  // 未ログイン時の条件
+  const publicOnlySql = `
+    SELECT
       c.*,
       u.display_name as author_name,
       req.id as request_id,
@@ -114,11 +92,11 @@ export async function getAllRecentComments() {
     LEFT JOIN cit_requests req ON c.target_type = 'request' AND c.target_id = req.id
     LEFT JOIN cit_reports rep ON c.target_type = 'report' AND c.target_id = rep.id
     LEFT JOIN cit_requests req_from_rep ON rep.request_id = req_from_rep.id
-    WHERE 
+    WHERE
       (
-        (c.target_type = 'request' AND (req.user_id = ? OR req.is_active = 1))
-        OR 
-        (c.target_type = 'report' AND (req_from_rep.user_id = ? OR req_from_rep.is_active = 1))
+        (c.target_type = 'request' AND req.is_active = 1 AND req.is_public = 1)
+        OR
+        (c.target_type = 'report' AND req_from_rep.is_active = 1 AND req_from_rep.is_public = 1)
       )
     ORDER BY c.updated_at DESC
   `;
@@ -130,4 +108,27 @@ export async function getAllRecentComments() {
     const result = await query(publicOnlySql, []);
     return result.rows;
   }
+}
+
+export async function deleteComment(
+  commentId: string,
+  userId: string | null,
+  isAdmin: boolean,
+) {
+  // 権限チェック：投稿者自身、または管理者のみ削除可能
+  const sql = `SELECT user_id FROM cit_comments WHERE id = ?`;
+  const result = await query(sql, [commentId]);
+
+  if (result.rows.length === 0) {
+    throw new Error("コメントが見つかりません");
+  }
+
+  const comment = result.rows[0];
+
+  if (!isAdmin && comment.user_id !== userId) {
+    throw new Error("このコメントを削除する権限がありません");
+  }
+
+  const deleteSql = `DELETE FROM cit_comments WHERE id = ?`;
+  await query(deleteSql, [commentId]);
 }

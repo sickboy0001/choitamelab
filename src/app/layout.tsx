@@ -6,6 +6,7 @@ import { auth, signIn, signOut } from "@/auth";
 import Navigation from "@/components/layout/Navigations";
 import Footer from "@/components/layout/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { ToastContainer } from "@/components/ui/toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,7 @@ export default async function RootLayout({
           <main className="flex-1 bg-white">{children}</main>
         </Navigation>
 
+        <ToastContainer />
         <Footer />
         <GoogleAnalytics gaId="G-NJ2V7CT80L" />
       </body>

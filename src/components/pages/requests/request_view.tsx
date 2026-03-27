@@ -37,6 +37,26 @@ export default function RequestView({
             <UserTooltip userId={request.user_id} name={request.author_name} />{" "}
             | 作成日: {new Date(request.created_at).toLocaleDateString()}
           </div>
+          <div className="flex gap-2 mt-2">
+            {request.is_active ? (
+              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+                有効
+              </span>
+            ) : (
+              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+                下書き
+              </span>
+            )}
+            {request.is_public ? (
+              <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
+                公開
+              </span>
+            ) : (
+              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
+                非公開
+              </span>
+            )}
+          </div>
         </div>
         {(isAuthor || isAdmin) && (
           <div className="flex items-center gap-2">
@@ -103,6 +123,8 @@ export default function RequestView({
           comments={requestComments}
           targetType="request"
           targetId={id}
+          currentUserId={userId}
+          isAdmin={isAdmin}
         />
       </div>
     </div>

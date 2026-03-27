@@ -83,6 +83,8 @@ export default function ReportItem({
               comments={report.comments || []}
               targetType="report"
               targetId={report.id}
+              currentUserId={currentUserId}
+              isAdmin={isAdmin}
             />
           </div>
         </div>

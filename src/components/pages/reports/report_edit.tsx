@@ -79,7 +79,7 @@ export default function ReportEdit({
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <div className="flex gap-6">
             <label
               className={`flex items-center gap-2 cursor-pointer ${!isRequestActive ? "opacity-50 grayscale" : ""}`}
@@ -91,9 +91,15 @@ export default function ReportEdit({
                 className="w-4 h-4 text-orange-600"
                 disabled={!isRequestActive}
               />
-              <span className="text-sm font-medium text-slate-700">
-                有効にする {!isRequestActive && "(依頼が下書きのため固定)"}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-slate-700">
+                  有効にする {!isRequestActive && "(依頼が下書きのため固定)"}
+                </span>
+                <span className="text-xs text-slate-500">
+                  状態管理：
+                  {initialIsActive ? "正式提出済み" : "下書き（未提出）"}
+                </span>
+              </div>
             </label>
             <label
               className={`flex items-center gap-2 cursor-pointer ${!isRequestPublic ? "opacity-50 grayscale" : ""}`}
@@ -105,9 +111,17 @@ export default function ReportEdit({
                 className="w-4 h-4 text-orange-600"
                 disabled={!isRequestPublic}
               />
-              <span className="text-sm font-medium text-slate-700">
-                公開する {!isRequestPublic && "(依頼が非公開のため固定)"}
-              </span>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-slate-700">
+                  公開する {!isRequestPublic && "(依頼が非公開のため固定)"}
+                </span>
+                <span className="text-xs text-slate-500">
+                  権限管理：
+                  {initialIsPublic
+                    ? "誰でも閲覧可能"
+                    : "依頼者・管理者のみ閲覧可能"}
+                </span>
+              </div>
             </label>
           </div>
           <p className="text-xs text-slate-500">

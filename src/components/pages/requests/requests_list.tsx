@@ -134,10 +134,7 @@ export default function RequestsList({
           </p>
         ) : (
           displayRequests.map((req) => {
-            const isMine = userId === req.user_id;
-            const targetUrl = isMine
-              ? `/requests/${req.id}/edit`
-              : `/requests/${req.id}`;
+            const targetUrl = `/requests/${req.id}`;
 
             return (
               <Link
@@ -151,11 +148,9 @@ export default function RequestsList({
                       {req.title}
                     </span>
                     <div className="flex gap-1">
-                      {isMine && (
-                        <div className="px-2 py-1 bg-orange-100 text-[10px] font-medium rounded text-orange-600">
-                          編集する
-                        </div>
-                      )}
+                      <div className="px-2 py-1 bg-orange-100 text-[10px] font-medium rounded text-orange-600">
+                        編集する
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-2">

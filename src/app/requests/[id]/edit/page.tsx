@@ -36,9 +36,9 @@ export default async function EditRequestPage({
     const is_public = formData.get("is_public") === "on";
 
     // バリデーション
-    if (title.length + appeal_point.length > 100) {
+    if (title.length + appeal_point.length > 300) {
       throw new Error(
-        "タイトルとアピールポイントの合計は100文字以内にする必要があります。",
+        "タイトルとアピールポイントの合計は300文字以内にする必要があります。",
       );
     }
 

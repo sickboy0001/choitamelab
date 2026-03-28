@@ -61,14 +61,14 @@ export default function RequestNew({ createAction }: RequestNewProps) {
       <form ref={formRef} action={createAction} className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700 flex justify-between items-center">
-            <span>タイトル (タイトル＋アピールで100文字以内)</span>
+            <span>タイトル (タイトル＋アピールで300文字以内)</span>
             <span
               className={cn(
                 "text-xs font-mono",
-                totalLength > 100 ? "text-red-600 font-bold" : "text-slate-500",
+                totalLength > 300 ? "text-red-600 font-bold" : "text-slate-500",
               )}
             >
-              合計: {totalLength}/100文字
+              合計: {totalLength}/300文字
             </span>
           </label>
           <input

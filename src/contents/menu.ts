@@ -3,6 +3,7 @@ import {
   FileText,
   MessageSquare,
   PlusCircle,
+  BarChart3,
   LucideIcon,
 } from "lucide-react";
 
@@ -65,5 +66,14 @@ export const menuDashboard: MenuItem[] = [
     isLoginOnly: true,
     isAdminOnly: true,
     isVisible: false,
+  },
+  {
+    title: "Admini",
+    label: "管理ダッシュボード",
+    href: "/admini",
+    icon: BarChart3,
+    colorClass: "text-indigo-600",
+    bgColorClass: "bg-indigo-100",
+    isAdminOnly: true,
   },
 ];

@@ -13,6 +13,7 @@ export function RequestSummary({
   contentMarkdown,
 }: RequestSummaryProps) {
   const sections = parseMarkdownSections(contentMarkdown);
+  console.log("appealPoint:", appealPoint);
 
   return (
     <div className="space-y-8">
@@ -20,7 +21,9 @@ export function RequestSummary({
         <h2 className="text-sm font-bold text-orange-800 uppercase tracking-wider mb-2">
           アピールポイント
         </h2>
-        <p className="text-slate-800">{appealPoint}</p>
+        <p style={{ whiteSpace: "pre-line" }} className="text-slate-800">
+          {appealPoint}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

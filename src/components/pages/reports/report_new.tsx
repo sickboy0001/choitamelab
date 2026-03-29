@@ -60,7 +60,9 @@ export default function ReportNew({
         <h2 className="text-sm font-bold text-orange-800 uppercase tracking-wider mb-2">
           アピールポイント
         </h2>
-        <p className="text-slate-800">{requestAppealPoint}</p>
+        <p style={{ whiteSpace: "pre-line" }} className="text-slate-800">
+          {requestAppealPoint}
+        </p>
       </div>
 
       {/* 依頼内容をカード形式で表示 */}

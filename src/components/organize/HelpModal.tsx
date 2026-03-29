@@ -17,9 +17,8 @@ import remarkGfm from "remark-gfm";
 const HELP_FILES = [
   { slug: "00_index", label: "トップ" },
   { slug: "01_quickstart", label: "クイックスタート" },
-  { slug: "02_privacy", label: "公開制限" },
-  { slug: "03_guest_limits", label: "ゲストの制限" },
   { slug: "05_markdown", label: "Markdown" },
+  { slug: "90_terms", label: "利用規約" },
 ];
 
 export function HelpModal({ children }: { children?: React.ReactNode }) {

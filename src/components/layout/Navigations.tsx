@@ -64,7 +64,7 @@ export default function Navigation({
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  const showSidebar = pathname !== "/";
+  const showSidebar = pathname !== "/" && !pathname.startsWith("/admini");
 
   const HEADER_HEIGHT = "64px";
 

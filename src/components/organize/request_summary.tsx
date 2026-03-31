@@ -13,7 +13,7 @@ export function RequestSummary({
   contentMarkdown,
 }: RequestSummaryProps) {
   const sections = parseMarkdownSections(contentMarkdown);
-  console.log("appealPoint:", appealPoint);
+  // console.log("appealPoint:", appealPoint);
 
   return (
     <div className="space-y-8">

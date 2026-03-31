@@ -9,8 +9,17 @@ export default function AdminiPage() {
   const [activeTab, setActiveTab] = useState<"looker" | "og">("looker");
 
   useEffect(() => {
+    const savedTab = localStorage.getItem("admini_active_tab");
+    if (savedTab === "looker" || savedTab === "og") {
+      setActiveTab(savedTab);
+    }
     setMounted(true);
   }, []);
+
+  const handleTabChange = (tab: "looker" | "og") => {
+    setActiveTab(tab);
+    localStorage.setItem("admini_active_tab", tab);
+  };
 
   if (!mounted) {
     return (
@@ -26,7 +35,7 @@ export default function AdminiPage() {
         {/* Simple Tab List */}
         <div className="flex w-full mb-6 bg-gray-100 p-1 rounded-xl">
           <button
-            onClick={() => setActiveTab("looker")}
+            onClick={() => handleTabChange("looker")}
             className={`flex-1 py-3 rounded-lg font-medium transition-all ${
               activeTab === "looker"
                 ? "bg-white shadow-sm text-orange-600"
@@ -36,7 +45,7 @@ export default function AdminiPage() {
             Looker Studio
           </button>
           <button
-            onClick={() => setActiveTab("og")}
+            onClick={() => handleTabChange("og")}
             className={`flex-1 py-3 rounded-lg font-medium transition-all ${
               activeTab === "og"
                 ? "bg-white shadow-sm text-orange-600"

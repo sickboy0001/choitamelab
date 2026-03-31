@@ -22,9 +22,7 @@ export default function Dashboard({
   isAdmin,
   isLoggedIn,
 }: DashboardProps) {
-  const [displayName, setDisplayName] = useState<string | null>(
-    userName || null,
-  );
+  const [displayName, setDisplayName] = useState<string | null>("" || null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {

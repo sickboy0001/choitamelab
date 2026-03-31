@@ -35,22 +35,24 @@ export default function Navigation({
   children,
 }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [displayName, setDisplayName] = useState<string | null>(
-    session?.user?.name || null,
-  );
+  const [displayName, setDisplayName] = useState<string | null>(null);
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (session?.user?.id) {
         const profile = await getPublicUserProfile(session.user.id);
-        if (profile?.display_name) {
-          setDisplayName(profile.display_name);
-        }
+        // getPublicUserProfile の表示名があれば優先し、なければ session.user.name を使う
+        setDisplayName(profile?.display_name || session?.user?.name || null);
+        setIsProfileLoaded(true);
+      } else {
+        setDisplayName(null);
+        setIsProfileLoaded(false);
       }
     };
     fetchUserProfile();
-  }, [session?.user?.id]);
+  }, [session?.user?.id, session?.user?.name]);
 
   const navItems = [
     { href: "/dashboard", label: "ダッシュボード", icon: LayoutDashboard },
@@ -64,10 +66,15 @@ export default function Navigation({
 
   const showSidebar = pathname !== "/";
 
+  const HEADER_HEIGHT = "64px";
+
   return (
-    <>
-      {/* Header - 固定 */}
-      <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 md:px-6 fixed top-0 left-0 right-0 z-50">
+    <div className="min-h-screen flex flex-col bg-white">
+      {/* Header - Fixed */}
+      <header
+        className="bg-white border-b border-gray-200 flex items-center px-4 md:px-6 fixed top-0 left-0 right-0 z-50"
+        style={{ height: HEADER_HEIGHT }}
+      >
         {showSidebar && (
           <button
             onClick={toggleMenu}
@@ -91,7 +98,7 @@ export default function Navigation({
                 </span>
               )}
               <span className="text-sm font-medium text-slate-700 hidden sm:inline-block">
-                {displayName || session.user?.email}
+                {isProfileLoaded ? displayName || session.user?.email : ""}
               </span>
               <div className="group relative">
                 {session.user?.image ? (
@@ -102,9 +109,11 @@ export default function Navigation({
                   />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold cursor-pointer">
-                    {(displayName || session.user?.email || "U")
-                      .charAt(0)
-                      .toUpperCase()}
+                    {isProfileLoaded
+                      ? (displayName || session.user?.email || "U")
+                          .charAt(0)
+                          .toUpperCase()
+                      : ""}
                   </div>
                 )}
                 <div className="absolute right-0 top-full w-48 pt-2 hidden group-hover:block">
@@ -140,29 +149,25 @@ export default function Navigation({
         </div>
       </header>
 
-      {/* Main Container - ヘッダー分の余白を追加 */}
-      <div className="flex">
+      <div className="flex flex-1" style={{ paddingTop: HEADER_HEIGHT }}>
         {/* Sidebar Overlay (Mobile) */}
-        <div
-          className={cn(
-            "fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 md:hidden",
-            isOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none",
-          )}
-          onClick={closeMenu}
-        />
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={closeMenu}
+          />
+        )}
 
-        {/* Sidebar - スクロールに追従 */}
+        {/* Sidebar - Fixed */}
         {showSidebar && (
           <aside
             className={cn(
-              "fixed top-16 inset-y-0 left-0 w-64 md:w-80 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:top-0",
+              "fixed bottom-0 left-0 w-64 md:w-80 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out overflow-y-auto md:translate-x-0",
               isOpen ? "translate-x-0" : "-translate-x-full",
             )}
-            style={{ paddingTop: "4rem" }}
+            style={{ top: HEADER_HEIGHT }}
           >
-            <div className="px-4 space-y-1">
+            <div className="px-4 py-6 space-y-1">
               <div className="md:hidden flex items-center justify-between mb-6">
                 <span className="font-bold text-orange-600 text-xl">
                   ChoitameLab
@@ -228,14 +233,24 @@ export default function Navigation({
           </aside>
         )}
 
+        {/* Sidebar Placeholder for Desktop - Sidebar takes space in flex flow */}
+        {showSidebar && (
+          <div
+            className="hidden md:block md:w-80 flex-shrink-0"
+            aria-hidden="true"
+          />
+        )}
+
         {/* Main Content Area */}
         <main
-          className={cn("flex-1 p-6 pt-16", !showSidebar && "p-4")}
-          style={{ paddingTop: "4rem" }}
+          className={cn(
+            "flex-1 p-6 transition-all duration-300 min-w-0 w-full flex flex-col items-center",
+            !showSidebar && "p-4",
+          )}
         >
-          {children}
+          <div className="w-full max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
-    </>
+    </div>
   );
 }

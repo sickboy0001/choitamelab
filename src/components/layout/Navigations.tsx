@@ -22,7 +22,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 interface NavigationProps {
-  session: any; // Using any for now to avoid complex type issues with next-auth v5 session in client
+  session: any;
   signOutAction: () => Promise<void>;
   signInAction: () => Promise<void>;
   children: React.ReactNode;
@@ -65,9 +65,9 @@ export default function Navigation({
   const showSidebar = pathname !== "/";
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 md:px-6 sticky top-0 z-50">
+    <>
+      {/* Header - 固定 */}
+      <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 md:px-6 fixed top-0 left-0 right-0 z-50">
         {showSidebar && (
           <button
             onClick={toggleMenu}
@@ -87,7 +87,7 @@ export default function Navigation({
             <div className="flex items-center gap-3">
               {session.user?.isAdmin && (
                 <span className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase tracking-wider">
-                  Admin
+                  ADMIN
                 </span>
               )}
               <span className="text-sm font-medium text-slate-700 hidden sm:inline-block">
@@ -140,7 +140,8 @@ export default function Navigation({
         </div>
       </header>
 
-      <div className="flex flex-1">
+      {/* Main Container - ヘッダー分の余白を追加 */}
+      <div className="flex">
         {/* Sidebar Overlay (Mobile) */}
         <div
           className={cn(
@@ -152,15 +153,16 @@ export default function Navigation({
           onClick={closeMenu}
         />
 
-        {/* Sidebar */}
+        {/* Sidebar - スクロールに追従 */}
         {showSidebar && (
           <aside
             className={cn(
-              "fixed inset-y-0 left-0 w-64 md:w-80 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block",
+              "fixed top-16 inset-y-0 left-0 w-64 md:w-80 bg-gray-50 border-r border-gray-200 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:top-0",
               isOpen ? "translate-x-0" : "-translate-x-full",
             )}
+            style={{ paddingTop: "4rem" }}
           >
-            <nav className="p-4 space-y-1 h-full flex flex-col">
+            <div className="px-4 space-y-1">
               <div className="md:hidden flex items-center justify-between mb-6">
                 <span className="font-bold text-orange-600 text-xl">
                   ChoitameLab
@@ -194,7 +196,7 @@ export default function Navigation({
                 );
               })}
 
-              <div className="mt-auto md:hidden pt-4 border-t border-gray-200">
+              <div className="md:hidden pt-4 border-t border-gray-200">
                 {session ? (
                   <div className="space-y-1">
                     <Link
@@ -218,20 +220,22 @@ export default function Navigation({
                     onClick={() => signInAction()}
                     className="flex w-full items-center px-4 py-2 text-sm font-medium text-slate-700 hover:bg-gray-200 rounded-md"
                   >
-                    <LogOut size={18} className="mr-3" />
                     ログイン
                   </button>
                 )}
               </div>
-            </nav>
+            </div>
           </aside>
         )}
 
         {/* Main Content Area */}
-        <div className={cn("flex-1 flex flex-col", showSidebar && "p-6")}>
+        <main
+          className={cn("flex-1 p-6 pt-16", !showSidebar && "p-4")}
+          style={{ paddingTop: "4rem" }}
+        >
           {children}
-        </div>
+        </main>
       </div>
-    </div>
+    </>
   );
 }

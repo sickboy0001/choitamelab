@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 import { getUserProfile, updateUserProfile } from "@/service/user-service";
 import Profile from "@/components/pages/profile/profile";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "プロフィール | ChoitameLab",
+};
 
 export default async function ProfilePage() {
   const user = await getUserProfile();

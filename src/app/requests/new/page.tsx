@@ -2,6 +2,11 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { createRequest } from "@/service/request-service";
 import RequestNew from "@/components/pages/requests/request_new";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "新規依頼作成 | ChoitameLab",
+};
 
 export default async function NewRequestPage() {
   const session = await auth();

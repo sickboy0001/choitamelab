@@ -1,6 +1,11 @@
 import { auth } from "@/auth";
 import AdminiPage from "@/components/pages/admini/admini";
 import { isAdministrator } from "@/lib/user";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "管理者用ダッシュボード | ChoitameLab",
+};
 
 export default async function AdminiPageWrapper() {
   const session = await auth();

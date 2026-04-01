@@ -1,7 +1,24 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
-import { getRequestDetail, createReport } from "@/service/report-service";
+import {
+  getRequestDetail,
+  createReport,
+  getRequestTitleDetail,
+} from "@/service/report-service";
 import ReportNew from "@/components/pages/reports/report_new";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const request = await getRequestTitleDetail(id);
+  return {
+    title: `報告作成: ${request?.title || "依頼"} | ChoitameLab`,
+  };
+}
 
 export default async function NewReportPage({
   params,

@@ -1,9 +1,25 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
-import { getRequestDetail } from "@/service/report-service";
+import {
+  getRequestDetail,
+  getRequestTitleDetail,
+} from "@/service/report-service";
 import { updateRequest } from "@/service/request-service";
 import { isAdministrator } from "@/lib/user";
 import RequestEdit from "@/components/pages/requests/request_edit";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const request = await getRequestTitleDetail(id);
+  return {
+    title: `編集: ${request?.title || "依頼"} | ChoitameLab`,
+  };
+}
 
 export default async function EditRequestPage({
   params,

@@ -1,10 +1,26 @@
-import { getRequestDetail } from "@/service/report-service";
+import {
+  getRequestDetail,
+  getRequestTitleDetail,
+} from "@/service/report-service";
 import { getReportsByRequestId } from "@/service/report-service";
 import { getComments } from "@/service/comment-service";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import RequestView from "@/components/pages/requests/request_view";
 import { isAdministrator } from "@/lib/user";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const request = await getRequestTitleDetail(id);
+  return {
+    title: `${request?.title || "依頼詳細"} | ChoitameLab`,
+  };
+}
 
 export default async function RequestDetailPage({
   params,

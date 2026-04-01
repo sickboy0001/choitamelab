@@ -1,6 +1,11 @@
 import { auth } from "@/auth";
 import Dashboard from "@/components/pages/dashboard/dashboard";
 import { isAdministrator } from "@/lib/user";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ダッシュボード | ChoitameLab",
+};
 
 export default async function DashboardPage() {
   const session = await auth();

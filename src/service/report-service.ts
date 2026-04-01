@@ -28,6 +28,22 @@ export async function getRequestDetail(id: string) {
   return request;
 }
 
+export async function getRequestTitleDetail(id: string) {
+  const session = await auth();
+
+  const sql = `
+    SELECT r.title
+    FROM cit_requests r
+    WHERE r.id = ?
+  `;
+  const result = await query(sql, [id]);
+  const request = result.rows[0] as any;
+
+  if (!request) return null;
+
+  return request;
+}
+
 export async function getReportsByRequestId(requestId: string) {
   const session = await auth();
   const userId = session?.user?.id;

@@ -586,6 +586,9 @@ export default async function handler(req, res) {
 [text](README_part.md)
 
 ## history
+- 2026/04/02 
+  - 管理者用ダッシュボード、Looker対応（URL外だし）、ページタイトル調整
+  - X-Account課金対応
 - 2026/03/23
   - 見た目諸々調整
 - 2026/03/14

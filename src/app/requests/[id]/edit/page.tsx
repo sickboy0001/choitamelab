@@ -4,7 +4,7 @@ import {
   getRequestDetail,
   getRequestTitleDetail,
 } from "@/service/report-service";
-import { updateRequest } from "@/service/request-service";
+import { updateRequest, deleteRequest } from "@/service/request-service";
 import { isAdministrator } from "@/lib/user";
 import RequestEdit from "@/components/pages/requests/request_edit";
 import type { Metadata } from "next";
@@ -70,6 +70,12 @@ export default async function EditRequestPage({
     redirect(`/requests/${id}`);
   }
 
+  async function deleteAction() {
+    "use server";
+    await deleteRequest(id);
+    redirect("/requests");
+  }
+
   return (
     <RequestEdit
       id={id}
@@ -77,6 +83,7 @@ export default async function EditRequestPage({
       isAdmin={isAdmin}
       isAuthor={isAuthor}
       updateAction={updateAction}
+      deleteAction={deleteAction}
     />
   );
 }

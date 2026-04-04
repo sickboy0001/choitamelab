@@ -30,7 +30,7 @@ export default function DashboardMenu({
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-6 mb-4 sm:mb-12">
       {filteredMenu.map((item) => {
         const Icon = item.icon;
         const isSpecial = item.href === "/requests/new";
@@ -39,33 +39,35 @@ export default function DashboardMenu({
           <div
             key={item.href}
             className={cn(
-              "p-6 rounded-xl border shadow-sm",
+              "p-2 sm:p-6 rounded-xl border shadow-sm",
               isSpecial
                 ? "bg-orange-50 border-orange-100"
                 : "bg-white border-gray-200",
             )}
           >
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-2 sm:gap-4 mb-1 sm:mb-4">
               <div
                 className={cn(
-                  "p-3 rounded-lg",
+                  "p-1.5 sm:p-3 rounded-lg",
                   item.bgColorClass,
                   item.colorClass,
                 )}
               >
-                <Icon size={24} />
+                <Icon size={18} className="sm:size-6" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-medium">
+                <p className="text-[8px] sm:text-sm text-gray-500 font-medium">
                   {item.title}
                 </p>
-                <h3 className="text-2xl font-bold">{item.label}</h3>
+                <h3 className="text-sm sm:text-2xl font-bold leading-tight">
+                  {item.label}
+                </h3>
               </div>
             </div>
             <Link
               href={item.href}
               className={cn(
-                "text-sm font-medium hover:underline",
+                "text-[10px] sm:text-sm font-medium hover:underline",
                 item.colorClass,
               )}
             >

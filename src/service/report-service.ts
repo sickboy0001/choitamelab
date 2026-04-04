@@ -1,6 +1,7 @@
 import { query } from "@/lib/db";
 import { auth } from "@/auth";
 import { nanoid } from "nanoid";
+import { isAdministrator } from "@/lib/user";
 
 export async function getRequestDetail(id: string) {
   const session = await auth();
@@ -301,4 +302,36 @@ export async function getMyReports() {
 
   const result = await query(sql, [userId]);
   return result.rows;
+}
+
+export async function deleteReport(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  // 権限チェック：作成者本人か管理者のみ
+  const checkSql = "SELECT user_id FROM cit_reports WHERE id = ?";
+  const checkResult = await query(checkSql, [id]);
+  if (checkResult.rows.length === 0) return;
+
+  const report = checkResult.rows[0] as any;
+  if (!isAdministrator(session) && report.user_id !== session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  // 関連データの削除 (target_type = 'report')
+  await query(
+    `DELETE FROM cit_comments WHERE target_type = 'report' AND target_id = ?`,
+    [id],
+  );
+  await query(
+    `DELETE FROM cit_likes WHERE target_type = 'report' AND target_id = ?`,
+    [id],
+  );
+  await query(
+    `DELETE FROM cit_histories WHERE target_type = 'report' AND target_id = ?`,
+    [id],
+  );
+
+  // 報告の削除
+  await query(`DELETE FROM cit_reports WHERE id = ?`, [id]);
 }

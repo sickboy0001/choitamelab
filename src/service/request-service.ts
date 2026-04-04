@@ -109,3 +109,54 @@ export async function updateRequest(
 
   await query(sql, args);
 }
+
+export async function deleteRequest(id: string) {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  // 管理者でない場合は、自分の投稿のみ削除可能であることを確認するために、まずデータを取得
+  const checkSql = "SELECT user_id FROM cit_requests WHERE id = ?";
+  const checkResult = await query(checkSql, [id]);
+  if (checkResult.rows.length === 0) return;
+
+  const request = checkResult.rows[0];
+  if (!isAdministrator(session) && request.user_id !== session.user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  // 関連データの削除
+  // 1. 報告(reports)に関連するコメント
+  await query(
+    `DELETE FROM cit_comments WHERE target_type = 'report' AND target_id IN (SELECT id FROM cit_reports WHERE request_id = ?)`,
+    [id],
+  );
+  // 2. 依頼(requests)に関連するコメント
+  await query(
+    `DELETE FROM cit_comments WHERE target_type = 'request' AND target_id = ?`,
+    [id],
+  );
+  // 3. 報告に関連するいいね
+  await query(
+    `DELETE FROM cit_likes WHERE target_type = 'report' AND target_id IN (SELECT id FROM cit_reports WHERE request_id = ?)`,
+    [id],
+  );
+  // 4. 依頼に関連するいいね
+  await query(
+    `DELETE FROM cit_likes WHERE target_type = 'request' AND target_id = ?`,
+    [id],
+  );
+  // 5. 報告に関連する履歴
+  await query(
+    `DELETE FROM cit_histories WHERE target_type = 'report' AND target_id IN (SELECT id FROM cit_reports WHERE request_id = ?)`,
+    [id],
+  );
+  // 6. 依頼に関連する履歴
+  await query(
+    `DELETE FROM cit_histories WHERE target_type = 'request' AND target_id = ?`,
+    [id],
+  );
+  // 7. 報告の削除
+  await query(`DELETE FROM cit_reports WHERE request_id = ?`, [id]);
+  // 8. 依頼の削除
+  await query(`DELETE FROM cit_requests WHERE id = ?`, [id]);
+}

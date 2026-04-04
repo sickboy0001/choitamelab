@@ -4,6 +4,7 @@ import {
   getRequestDetail,
   getReportDetail,
   updateReport,
+  deleteReport,
   getRequestTitleDetail,
 } from "@/service/report-service";
 import ReportEdit from "@/components/pages/reports/report_edit";
@@ -62,6 +63,12 @@ export default async function EditReportPage({
     redirect(`/requests/${report.request_id}`);
   }
 
+  async function deleteAction() {
+    "use server";
+    await deleteReport(reportId);
+    redirect(`/requests/${report.request_id}`);
+  }
+
   return (
     <ReportEdit
       reportId={reportId}
@@ -75,6 +82,7 @@ export default async function EditReportPage({
       initialIsActive={report.is_active === 1}
       initialIsPublic={report.is_public === 1}
       updateAction={updateAction}
+      deleteAction={deleteAction}
     />
   );
 }

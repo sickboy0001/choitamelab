@@ -10,6 +10,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ReportEditProps {
   reportId: string;
@@ -23,9 +34,11 @@ interface ReportEditProps {
   initialIsActive: boolean;
   initialIsPublic: boolean;
   updateAction: (formData: FormData) => Promise<void>;
+  deleteAction: () => Promise<void>;
 }
 
 export default function ReportEdit({
+  reportId,
   requestId,
   requestTitle,
   requestAppealPoint,
@@ -36,6 +49,7 @@ export default function ReportEdit({
   initialIsActive,
   initialIsPublic,
   updateAction,
+  deleteAction,
 }: ReportEditProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewMarkdown, setPreviewMarkdown] = useState("");
@@ -126,6 +140,37 @@ export default function ReportEdit({
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
+          <div className="flex-1">
+            <AlertDialog>
+              <AlertDialogTrigger
+                render={
+                  <button
+                    type="button"
+                    className="px-4 py-2 border border-red-200 bg-red-50 text-red-600 rounded-md text-sm font-medium hover:bg-red-100 transition-colors"
+                  >
+                    削除する
+                  </button>
+                }
+              />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>報告の削除</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    この報告を完全に削除しますか？この操作は取り消せません。
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteAction()}
+                    className="bg-red-600 text-white hover:bg-red-700"
+                  >
+                    削除
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
           <Link
             href={`/requests/${requestId}`}
             className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50"

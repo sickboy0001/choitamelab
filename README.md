@@ -551,9 +551,10 @@ export default async function handler(req, res) {
 色合い的には「 https://qiita.com/question-feed 」の鮮やかな橙色をベースにする形をイメージしています。
 
 ## TODO
-- [x] Vercel/og 対応
 - [ ] Vercel/og 使い方考える
 - [ ] Stripe 対応
+- [x] 物理削除、依頼、報告、コメントなどなど・・・
+- [x] Vercel/og 対応
 - [x] ヘルプ対応 コンテンツ精査
 - [x] 報告への有効、公開の補足追加
 - [x] コメント削除機能追加
@@ -586,6 +587,8 @@ export default async function handler(req, res) {
 [text](README_part.md)
 
 ## history
+- 2026/04/05 
+  - 物理削除の機能調整
 - 2026/04/02 
   - 管理者用ダッシュボード、Looker対応（URL外だし）、ページタイトル調整
   - X-Account課金対応

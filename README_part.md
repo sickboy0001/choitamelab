@@ -11,6 +11,7 @@
 | ユーザー登録 | [`src/app/api/auth/signup/route.ts`](src/app/api/auth/signup/route.ts:1) | 新規ユーザー登録（メール認証付き） |
 | メール送信共通関数 | [`src/lib/mail.ts`](src/lib/mail.ts:8) | Resend API を使用したメール送信（開発環境ではコンソール出力） |
 | 管理者判定ユーティリティ | [`src/lib/user.ts`](src/lib/user.ts:7) | セッションまたはメールアドレスから管理者権限を判定 |
+| 管理者用ダッシュボード | [`src/app/admini/page.tsx`](src/app/admini/page.tsx:1) | Looker Studio 連携による統計表示、Vercel OG プレビュー機能 |
 | Google OAuth 認証 | [`src/auth.ts`](src/auth.ts:26) | NextAuth を使用した Google 認証連携 |
 | メールアドレス・パスワード認証 | [`src/auth.ts`](src/auth.ts:30) | クレデンシャルプロバイダーによる認証 |
 
@@ -36,6 +37,7 @@
 | 汎用ダイアログ | [`src/components/ui/dialog.tsx`](src/components/ui/dialog.tsx:1) | shadcn/ui のダイアログコンポーネント |
 | 汎用シート | [`src/components/ui/sheet.tsx`](src/components/ui/sheet.tsx:1) | shadcn/ui のサイドシートコンポーネント |
 | 汎用ドラワー | [`src/components/ui/drawer.tsx`](src/components/ui/drawer.tsx:1) | shadcn/ui のドラワーコンポーネント |
+| 動的ページタイトル設定 | [`src/app/layout.tsx`](src/app/layout.tsx:1) | 各ページで `Metadata` を使用したタイトル設定 |
 
 ### API・インフラ連携
 
